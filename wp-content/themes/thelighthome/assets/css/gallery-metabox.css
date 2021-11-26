@@ -1,0 +1,71 @@
+#gallery-metabox-list {overflow: hidden;margin: 0;}
+#gallery-metabox-list li {
+   float: left;
+   width: 130px;
+   text-align: center;
+   margin: 10px 5px !important;
+   cursor: move;
+   background-size:  100% 100%;
+}
+#gallery-metabox-list img {margin-bottom: 5px}
+
+.wrap-upload {
+	position: relative;
+    height: 130px;
+    overflow: hidden;
+    width: 130px;
+    float: left;
+    margin-right: 5px;
+    border: 2px dashed #074a81;
+    background-color: #eee;
+    background-image: url('../images/bg-upload-image.png');
+    background-position: center 30px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+.gallery-image .wrap-upload {
+	border: none;
+	background-image: url('../images/gallery-icon.png');
+	background-position: center 6px;
+}
+.wrap-upload .user-image {
+	position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+    opacity: 0;
+}
+.wrap-upload p{
+	color: #f50;
+	text-align: center;
+	font-weight: 700;
+	cursor: pointer;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+.gallery-image .wrap-upload p{
+	background-color:#055699;
+	margin: 0;
+	color: #fff;
+	padding: 3px 0;
+	font-weight: normal;
+}
+.img-upload,.gallery-image {overflow: hidden}
+.img-upload .img-preview>div,.gallery-image .img-preview>div {
+    width: 130px;
+    height: 130px;
+    margin-right: 5px;
+    border: 0;
+    float: left;
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    background-color: #a1a1a1;
+    border-radius: 5px;
+}
