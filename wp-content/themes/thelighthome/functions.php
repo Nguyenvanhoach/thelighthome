@@ -2229,157 +2229,81 @@ function getChildCategory($idParent) {
 	}
 }
 function searchBox() {?>        
-	<ul class="nav nav-pills mb-3 flex-nowrap" id="tabs-search" role="tablist">
-	<li class="nav-item"><a name="can_ban" class="nav-link active text-capitalize" id="tab-nhadat-ban" data-toggle="pill" href="#nhadat-ban" role="tab" aria-controls="pills-home" aria-selected="true" title="Nhà đất bán">Nhà đất bán</a></li>
-	<li class="nav-item"><a name="nhadatchothue" class="nav-link text-capitalize" id="tab-nhadat-chothue" data-toggle="pill" href="#nhadat-chothue" title="Nhà đất cho thuê" role="tab" aria-controls="pills-profile" aria-selected="false">Nhà đất cho thuê</a>
-	</li>
-</ul>
-<div class="tab-content rounded px-4 py-4" id="tabs-search">		  
-		<div id="nhadat-ban" class="tab-pane fade show active">
-					<form class="form-timkiem" action="<?php bloginfo('url'); ?>/ket-qua-tim-kiem" method="get" accept-charset="utf-8" enctype="multipart/form-data">
-						<input type="text" name="name_search" class="form-control mb-3 input_sp px-md-3" placeholder="Nhập địa điểm cần tìm kiếm...">
-						<input class="hinhthuc_bds" type="hidden" name="hinhthuc_bds" value="Cần bán">
-							<div class="row">
-								<div class="col-md-6">
-									<div class="select-box mb-3">
-										<select class="form-control" name="loai_bds">
-											<option value="">Loại bất động sản</option>
-											<?php showTaxomi('loaibds');?>
-										</select>
-								</div>
-								</div>
-								<div class="col-md-6">
-									<div class="select-box mb-3">
-										<select class="form-control" name="city_post">
-											<option value="">Tỉnh/Thành phố</option>
-											<option value="79">Hồ Chí Minh</option>
-											<option value="75">Đồng Nai</option>
-											<?php 
-											// $tinh_thanhpho = get_thanhpho();
-											// if(count($tinh_thanhpho) > 0):
-											//   foreach ($tinh_thanhpho as $k => $v) {
-											//     echo "<option ".selected($city_post, $v['matp'] )."  value='".$v['matp']."'>".$v['name']."</option>";
-											//   } 
-											// endif; 
-											?>
-										</select>
-								</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="select-box mb-3">
-										<select class="form-control" name="quan_post">
-											<option value="">Quận/Huyện</option>
-											<option value=""><?php echo $_POST['city_post'];?></option>
-											<?php
-											$quanhuyen = get_address($_POST['city_post'],'0');
-											if(count($quanhuyen) > 0):
-												foreach ($quanhuyen as $k => $v) {
-													echo "<option ".selected($quan_post, $v['maqh'] )."  value='".$v['maqh']."'>".$v['qh']."</option>";
-												}
-											endif;?>
-										</select>
-								</div>
-								</div>
-								<div class="col-md-6">
-									<div class="select-box  mb-3">
-										<select class="form-control" name="area_post">
-											<option value="">Diện tích</option>
-											<?php showTaxomi('area');?>
-										</select>
-								</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="select-box mb-3 mb-md-0">
-										<select class="form-control" name="pricebds_post">
-											<option value="">Mức giá</option>
-											<?php showTaxomi('pricebds');?>
-										</select>
-								</div> 
-								</div>
-								<div class="col-md-6">
-									<input type="submit" name="querySearch" class="form-control btn-search mx-auto d-block text-uppercase" value="Tìm Kiếm">
-								</div>
-							</div>
-						<?php wp_nonce_field( 'post_nonce', 'post_nonce_field' ); ?>
-					</form>                     
-			</div>
-			<div id="nhadat-chothue" class="tab-pane fade">
-					<form class="form-timkiem" action="<?php bloginfo('url'); ?>/ket-qua-tim-kiem" method="get" accept-charset="utf-8" enctype="multipart/form-data">
-						<input type="text" name="name_search" class="form-control mb-3 input_sp px-md-3" placeholder="Nhập địa điểm cần tìm kiếm...">
-						<input class="hinhthuc_bds" type="hidden" name="hinhthuc_bds" value="Cho thuê">
-							<div class="row">
-								<div class="col-md-6">
-									<div class="select-box mb-3">
-										<select class="form-control" name="loai_bds">
-											<option value="">Loại bất động sản</option>
-											<?php showTaxomi('loaibds');?>
-										</select>
-								</div>
-								</div>
-								<div class="col-md-6">
-									<div class="select-box mb-3">
-										<select class="form-control" name="city_post">
-											<option value="">Tỉnh/Thành phố</option>
-											<option value="79">Hồ Chí Minh</option>
-											<option value="75">Đồng Nai</option>
-											<?php 
-											// $tinh_thanhpho = get_thanhpho();
-											// if(count($tinh_thanhpho) > 0):
-											//   foreach ($tinh_thanhpho as $k => $v) {
-											//     echo "<option ".selected($city_post, $v['matp'] )."  value='".$v['matp']."'>".$v['name']."</option>";
-											//   } 
-											// endif; 
-											?>
-										</select>
-								</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="select-box mb-3">
-										<select class="form-control" name="quan_post">
-											<option value="">Quận/Huyện</option>
-											<option value=""><?php echo $_POST['city_post'];?></option>
-											<?php
-											$quanhuyen = get_address($_POST['city_post'],'0');
-											if(count($quanhuyen) > 0):
-												foreach ($quanhuyen as $k => $v) {
-													echo "<option ".selected($quan_post, $v['maqh'] )."  value='".$v['maqh']."'>".$v['qh']."</option>";
-												}
-											endif;?>
-										</select>
-								</div>
-								</div>
-								<div class="col-md-6">
-									<div class="select-box  mb-3">
-										<select class="form-control" name="area_post">
-											<option value="">Diện tích</option>
-											<?php showTaxomi('area');?>
-										</select>
-								</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="select-box mb-3 mb-md-0">
-										<select class="form-control" name="pricebds_post">
-											<option value="">Mức giá</option>
-											<?php showTaxomi('pricebds');?>
-										</select>
-								</div> 
-								</div>
-								<div class="col-md-6">
-									<input type="submit" name="querySearch" class="form-control btn-search mx-auto d-block text-uppercase" value="Tìm Kiếm">
-								</div>
-							</div>
-						<?php wp_nonce_field( 'post_nonce', 'post_nonce_field' ); ?>
-					</form>                     
-		 </div>    
-</div>            		
+	
+	<div class="tab-content rounded px-4 py-4" id="tabs-search">		  
+		<div id="nhadat-chothue" class="tab-pane fade show active">
+			<form class="form-timkiem" action="<?php bloginfo('url'); ?>/ket-qua-tim-kiem" method="get" accept-charset="utf-8" enctype="multipart/form-data">
+				<input type="text" name="name_search" class="form-control mb-3 input_sp px-md-3" placeholder="Nhập địa điểm cần tìm kiếm...">
+				<input class="hinhthuc_bds" type="hidden" name="hinhthuc_bds" value="Cho thuê">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="select-box mb-3">
+								<select class="form-control" name="loai_bds">
+									<option value="">Loại bất động sản</option>
+									<?php showTaxomi('loaibds');?>
+								</select>
+						</div>
+						</div>
+						<div class="col-md-6">
+							<div class="select-box mb-3">
+								<select class="form-control" name="city_post">
+									<option value="">Tỉnh/Thành phố</option>
+									<option value="79">Hồ Chí Minh</option>
+									<option value="75">Đồng Nai</option>
+									<?php 
+									// $tinh_thanhpho = get_thanhpho();
+									// if(count($tinh_thanhpho) > 0):
+									//   foreach ($tinh_thanhpho as $k => $v) {
+									//     echo "<option ".selected($city_post, $v['matp'] )."  value='".$v['matp']."'>".$v['name']."</option>";
+									//   } 
+									// endif; 
+									?>
+								</select>
+						</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="select-box mb-3">
+								<select class="form-control" name="quan_post">
+									<option value="">Quận/Huyện</option>
+									<option value=""><?php echo $_POST['city_post'];?></option>
+									<?php
+									$quanhuyen = get_address($_POST['city_post'],'0');
+									if(count($quanhuyen) > 0):
+										foreach ($quanhuyen as $k => $v) {
+											echo "<option ".selected($quan_post, $v['maqh'] )."  value='".$v['maqh']."'>".$v['qh']."</option>";
+										}
+									endif;?>
+								</select>
+						</div>
+						</div>
+						<div class="col-md-6">
+							<div class="select-box  mb-3">
+								<select class="form-control" name="area_post">
+									<option value="">Diện tích</option>
+									<?php showTaxomi('area');?>
+								</select>
+						</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="select-box mb-3 mb-md-0">
+								<select class="form-control" name="pricebds_post">
+									<option value="">Mức giá</option>
+									<?php showTaxomi('pricebds');?>
+								</select>
+						</div> 
+						</div>
+						<div class="col-md-6">
+							<input type="submit" name="querySearch" class="form-control btn-search mx-auto d-block text-uppercase" value="Tìm Kiếm">
+						</div>
+					</div>
+				<?php wp_nonce_field( 'post_nonce', 'post_nonce_field' ); ?>
+			</form>                     
+		</div>    
+	</div>            		
 <?php }
 function news_slidebar($post_page = '10') {
 	$args = array(
@@ -2565,7 +2489,7 @@ function bds_noibat($posts_per_page) {
 	      	$gia_post = get_post_meta($postid, 'gia_post', true );
 	      	$address_post = get_post_meta($postid, 'address_post', true );
 	      	
-	        echo '<div class="col-6 col-md-4 col-lg-3 my-3">
+	        echo '<div class="col-6 col-lg-4 my-3">
 	          	<div class="item-real box-real h-100">';
 	          		echo '<a href="'.get_the_permalink().'" title="'.get_the_title().'">';
 		                if(get_post_thumbnail_id($postid)) {
@@ -2575,24 +2499,25 @@ function bds_noibat($posts_per_page) {
 		                }
 	            	echo '</a>';
 	                echo '<div class="p-2 p-sm-2 p-md-2">
-	                	<a href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize mb-2 mb-md-3">'. get_the_title() .'</h4></a>';   
-		                echo '<div class="block-att d-flex flex-wrap align-items-center justify-content-between mb-2 mb-md-3">';
+	                	<a class="d-block" href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize my-1">'. get_the_title() .'</h4></a>';   
+		                echo '<div class="block-att d-flex flex-wrap align-items-center justify-content-between">';
 							if($gia_post) {
-				            	echo '<div class="listing-price">'.$gia_post.'</div>';
+				            	echo '<div class="pr-1 my-1"><i class="fa fa-usd"></i> Giá: <span class="listing-price">'.$gia_post.'</span></div>';
 				            }
 				            echo '<div class="listing-info d-flex flex-wrap align-items-center">';
 				            	if($phongngu_post) {
-					            	echo '<div class="mx-1"><i class="fa fa-bed mr-1" aria-hidden="true"></i>'.$phongngu_post.'</div>';
+					            	echo '<div><i class="fa fa-bed mr-1 my-1" aria-hidden="true"></i>'.$phongngu_post.'</div>';
 					            }
 					            if($phongtam_post) {
-					            	echo '<div class="mx-1"><i class="fa fa-bath mr-1" aria-hidden="true"></i>'.$phongtam_post.'</div>';
+					            	echo '<div><i class="fa fa-bath mr-1 my-1" aria-hidden="true"></i>'.$phongtam_post.'</div>';
 					            }
 					            if($dientich_post) {
-					            	echo '<div class="mx-1"><i class="fa fa-object-group mr-1" aria-hidden="true"></i>'.$dientich_post.'</div>';
+					            	echo '<div><i class="fa fa-object-group mr-1 my-1" aria-hidden="true"></i>Diện tích: <strong>'.$dientich_post.'</strong></div>';
 					            }
 					        echo '</div>';
 						echo '</div>';
-						echo '<div class="des-mute d-flex flex-nowrap align-items-center">';
+						echo '<div class="my-1 block-att"><i class="fa fa-calendar"></i>  '.get_the_time('d-m-Y').'</div>';
+						echo '<div class="des-mute d-flex flex-nowrap mt-2">';
 							if($address_post) {
 								echo '<i class="fa fa-map-marker mr-2" aria-hidden="true"></i><span class="text-capitalize">'.$address_post.'</span>';
 							}				 
@@ -2603,6 +2528,7 @@ function bds_noibat($posts_per_page) {
 	    endwhile;
 	    //Reset Post Data
     echo "</div>";
+	echo '<div class="text-center"><a title="Bất động sản nổi bật" href="'.get_bloginfo('url').'/bat-dong-san-noi-bat" class="txt-more px-4 py-3 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
     wp_reset_postdata();
   } 
 }
@@ -2644,7 +2570,6 @@ function register_info() {?>
 	                <select class="form-control" name="city_post">
 	                  <option value="">Tỉnh/Thành Phố</option>
 	                  <option value="79">Hồ Chí Minh</option>
-	                  <option value="75">Đồng Nai</option>
 	                  <?php
 	                  //  $tinh_thanhpho = get_thanhpho();
 	                  // if(count($tinh_thanhpho) > 0):

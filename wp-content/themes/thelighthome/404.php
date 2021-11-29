@@ -9,28 +9,21 @@
 
 get_header();
 ?>
-
-<main id="site-content" role="main">
-
-	<div class="section-inner thin error404-content">
-
-		<h1 class="entry-title"><?php _e( 'Page Not Found', 'twentytwenty' ); ?></h1>
-
-		<div class="intro-text"><p><?php _e( 'The page you were looking for could not be found. It might have been removed, renamed, or did not exist in the first place.', 'twentytwenty' ); ?></p></div>
-
-		<?php
-		get_search_form(
-			array(
-				'aria_label' => __( '404 not found', 'twentytwenty' ),
-			)
-		);
-		?>
-
-	</div><!-- .section-inner -->
-
-</main><!-- #site-content -->
-
-<?php get_template_part( 'template-parts/footer-menus-widgets' ); ?>
-
+<div class="container section-inner thin error404-content">
+		<div class="bg-white py-4 py-md-5 px-3 px-md-5 text-center">
+			<div class="py-lg-4">
+				<img loading="lazy" src="<?php echo get_template_directory_uri();?>/assets/images/404.svg" class="img-fluid d-block mx-auto mb-4" alt="<?php echo get_bloginfo( 'name' ); ?>">
+				<h1 class="entry-title"><?php _e( 'Không tìm thấy đường dẫn này', 'twentytwenty' ); ?></h1>
+				<div class="intro-text"><p>Bạn có thể truy cập vào <a href="<?php bloginfo('url'); ?>" title="trang chủ" style="color:#00aef0">trang chủ</a> hoặc sử dụng ô dưới đây để tìm kiếm</p></div>
+				<?php
+				get_search_form(
+					array(
+						'aria_label' => __( '404 not found', 'twentytwenty' ),
+					)
+				);
+				?>
+			</div>
+		</div>
+	</div>
 <?php
 get_footer();

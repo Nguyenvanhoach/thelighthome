@@ -58,14 +58,11 @@ get_header();
 </div>
 <div class="real-estate-special bg-gray py-4">
   <div class="container">
-		<div class="text-center mb-5 mt-4">
+		<div class="text-center mb-4 mt-4">
 			<h2 class="title-h2 d-flex flex-wrap align-items-center justify-content-center color-primary"><strong class="text-uppercase">Bất động sản nổi bật</strong></h2>
 			<div class="separator position-relative d-inline-block"><i class="fa fa-circle mx-auto"></i></div>
 		</div>
-    <?php echo bds_noibat('12'); ?>
-		<div>
-			<a title="Bất động sản nổi bật" href="<?php bloginfo('url');?>/bat-dong-san-noi-bat" class="txt-more text-capitalize">Xem thêm Bất động sản nổi bật<i class="ml-2 fa fa-chevron-right"></i></a>
-		</div>
+    <?php echo bds_noibat('12'); ?>		
   </div>
 </div>
 
