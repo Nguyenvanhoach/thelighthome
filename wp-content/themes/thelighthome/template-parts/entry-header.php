@@ -15,7 +15,7 @@ if ( is_singular() ) {
 
 ?>
 
-<header class="entry-header has-text-align-center<?php echo esc_attr( $entry_header_classes ); ?>">
+<div class="entry-header<?php echo esc_attr( $entry_header_classes ); ?>">
 
 	<div class="entry-header-inner section-inner medium">
 
@@ -43,9 +43,9 @@ if ( is_singular() ) {
 		}
 
 		if ( is_singular() ) {
-			the_title( '<h1 class="entry-title">', '</h1>' );
+			the_title( '<h1 class="entry-title text-uppercase">', '</h1>' );
 		} else {
-			the_title( '<h2 class="entry-title heading-size-1"><a href="' . esc_url( get_permalink() ) . '">', '</a></h2>' );
+			the_title( '<h2 class="entry-title text-uppercase heading-size-1"><a href="' . esc_url( get_permalink() ) . '">', '</a></h2>' );
 		}
 
 		$intro_text_width = '';
@@ -72,4 +72,4 @@ if ( is_singular() ) {
 
 	</div><!-- .entry-header-inner -->
 
-</header><!-- .entry-header -->
+	</div><!-- .entry-header -->

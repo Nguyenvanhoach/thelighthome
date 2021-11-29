@@ -38,17 +38,17 @@ get_header();
   <div class="container">
     <div class="row">
       <div class="col-4 col-md my-2 text-center">
-        <a href="<?php bloginfo('url'); ?>/can-ban/can-ban-nha-rieng/" title="Văn Phòng"><div class="icon-cat d-flex align-items-center justify-content-cente mx-auto mb-2"><img alt="Văn Phòng" src="<?php echo get_template_directory_uri();?>/assets/images/icon-home.png" class="img-fluid d-block mx-auto" loading="lazy"></div>
+        <a href="<?php bloginfo('url'); ?>/cho-thue/van-phong/" title="Văn Phòng"><div class="icon-cat d-flex align-items-center justify-content-cente mx-auto mb-2"><img alt="Văn Phòng" src="<?php echo get_template_directory_uri();?>/assets/images/icon-home.png" class="img-fluid d-block mx-auto" loading="lazy"></div>
           <div class="text-cat">Văn Phòng</div></a>
       </div>
       <div class="col-4 col-md my-2 text-center">
-        <a href="<?php bloginfo('url'); ?>/can-ban/ban-can-ho-chung-cu/" title="Căn hộ / Chung Cư" class="canho"><div class="icon-cat d-flex align-items-center justify-content-center mx-auto mb-2">
+        <a href="<?php bloginfo('url'); ?>/cho-thue/can-ho-chung-cu/" title="Căn hộ / Chung Cư" class="canho"><div class="icon-cat d-flex align-items-center justify-content-center mx-auto mb-2">
             <img alt="Căn Hộ / Chung Cư" src="<?php echo get_template_directory_uri();?>/assets/images/icon-canho.png" class="img-fluid d-block mx-auto" loading="lazy">
           </div>
           <div class="text-cat">Căn Hộ & Chung Cư</div></a>
       </div>
       <div class="col-4 col-md my-2 text-center">
-        <a href="<?php bloginfo('url'); ?>/cho-thue/cho-thue-nha-tro-phong-tro/" title="Phòng Cho Thuê" class="khoxuong"><div class="icon-cat d-flex align-items-center justify-content-center mx-auto mb-2">
+        <a href="<?php bloginfo('url'); ?>/cho-thue/phong-tro/" title="Phòng Cho Thuê" class="khoxuong"><div class="icon-cat d-flex align-items-center justify-content-center mx-auto mb-2">
             <img alt="Phòng Cho Thuê" src="<?php echo get_template_directory_uri();?>/assets/images/icon-ptro.png" class="img-fluid d-block mx-auto" loading="lazy">
           </div>
           <div class="text-cat">Phòng Cho Thuê</div></a>
@@ -56,99 +56,374 @@ get_header();
     </div>
   </div>
 </div>
-<div class="real-estate-special bg-gray py-4">
+<div class="real-estate-special bg-gray py-4 py-md-5">
   <div class="container">
-		<div class="text-center mb-4 mt-4">
-			<h2 class="title-h2 d-flex flex-wrap align-items-center justify-content-center color-primary"><strong class="text-uppercase">Bất động sản nổi bật</strong></h2>
-			<div class="separator position-relative d-inline-block"><i class="fa fa-circle mx-auto"></i></div>
+		<div class="text-center mb-4">
+			<h2 class="title-h2 d-flex flex-wrap align-items-center justify-content-center color-spec"><strong class="text-uppercase">Bất động sản nổi bật</strong></h2>
+			<div class="separator position-relative d-inline-block color-spec"><i class="fa fa-circle mx-auto color-spec"></i></div>
 		</div>
     <?php echo bds_noibat('12'); ?>		
   </div>
 </div>
-
-<div class="wrap-canho">
-  <div class="container py-4">
-    <h3 class="title-block d-flex flex-wrap align-items-center"><strong class="text-uppercase">Căn hộ chung cư</strong> <a title="Căn hộ chung cư" href="<?php bloginfo('url');?>/loai-bat-dong-san/can-ho-chung-cu/" class="view-all ml-auto">Xem tất cả <i class="ml-1 fa fa-plus"></i></a></h3>
-    <div class="block-chungcu">
-      <?php echo get_loai_bds('can-ho-chung-cu',12); ?>
+<div class="container py-4 py-md-5">
+  <div class="row">
+    <div class="col-md-7 col-lg-8">
+      <ul class="nav nav-tabs tabs-bds" id="tabs-bds" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link text-uppercase active" id="tab-bds-news" data-toggle="tab" href="#bds-news" role="tab" aria-controls="bds-news" aria-selected="true">Mới nhất</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-uppercase" id="tab-phong-tro" data-toggle="tab" href="#phong-tro" role="tab" aria-controls="phong-tro" aria-selected="false">Phòng trọ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-uppercase" id="tab-can-ho-chungcu" data-toggle="tab" href="#can-ho-chungcu" role="tab" aria-controls="can-ho-chungcu" aria-selected="false">Căn hộ chung cư</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-uppercase" id="tab-van-phong" data-toggle="tab" href="#van-phong" role="tab" aria-controls="van-phong" aria-selected="false">Văn phòng</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="tabs-bdsContent">
+        <div class="tab-pane fade show active" id="bds-news" role="tabpanel" aria-labelledby="tab-bds-news">
+          <div>
+            <?php
+              $post = array(
+                'post_status'   => 'publish',
+                'post_type' => 'post', 
+                'posts_per_page' => 9,   
+                'tax_query' => array(
+                  array(
+                      'taxonomy' => 'category',
+                      'field' => 'term_id',
+                      'terms' => '1',
+                  ) )
+              );
+            
+              $getPost = new WP_Query($post );
+              if($getPost->have_posts()) {  	
+                while ($getPost->have_posts() ) : $getPost->the_post();
+                  $postid = get_the_ID();          
+                  //$loaitinrao_post = get_post_meta($postid, 'loaitinrao_post', true );
+                  $dientich_post = get_post_meta($postid, 'dientich_post', true );
+                  $dientich_post = trim($dientich_post);
+                  $phongtam_post = get_post_meta(get_the_id(),'phongtam_post',true);
+                  $phongngu_post = get_post_meta(get_the_id(),'phongngu_post',true);
+                  $gia_post = get_post_meta($postid, 'gia_post', true );
+                  $address_post = get_post_meta($postid, 'address_post', true );
+                  echo '<div class="col-12 item-real box-real boxshadow-none my-4 px-4 py-2"><div class="row">';
+                    echo '<div class="col-4 col-lg-3 px-0">';
+                      echo '<a class="post-media h-100 d-block" href="'.get_the_permalink().'" title="'.get_the_title().'">';
+                        if(get_post_thumbnail_id($postid)) {
+                          echo '<div class="img-wrap">'.get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid d-block mx-auto','alt' => get_the_title(),'loading' => 'lazy')).'</div>';
+                        } else {
+                          echo"<div class='bg-img img-wrap'><img src='".get_template_directory_uri()."/assets/images/logo.png' alt='".get_bloginfo( 'name' )."' class='img-fluid d-block mx-auto'></div>";
+                        }
+                      echo '</a>';
+                    echo '</div>';                        
+                    echo '<div class="col-8 col-lg-9">';
+                        echo '<div class="h-100"><a class="d-block" href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize my-1">'. get_the_title() .'</h4></a>';   
+                        echo '<div class="block-att">';
+                          if($gia_post) {
+                            echo '<div class="my-1"><i class="fa fa-usd"></i> Giá: <span class="listing-price">'.$gia_post.'</span></div>';
+                          }
+                          echo '<div class="listing-info d-flex flex-wrap align-items-center">';
+                          if($phongngu_post) {
+                            echo '<div><i class="fa fa-bed mr-1 my-1" aria-hidden="true"></i>'.$phongngu_post.'</div>';
+                          }
+                          if($phongtam_post) {
+                            echo '<div><i class="fa fa-bath mr-1 my-1" aria-hidden="true"></i>'.$phongtam_post.'</div>';
+                          }
+                          if($dientich_post) {
+                            echo '<div><i class="fa fa-object-group mr-1 my-1" aria-hidden="true"></i>Diện tích: <strong>'.$dientich_post.'</strong></div>';
+                          }
+                        echo '</div>';
+                        echo '<div class="des-mute d-flex flex-nowrap mt-2">';
+                          if($address_post) {
+                            echo '<i class="fa fa-map-marker mr-1" aria-hidden="true"></i><span class="text-capitalize">'.$address_post.'</span>';
+                          }				 
+                        echo'</div>';
+                    echo '</div></div>';
+                    echo "</div>";
+                  echo "</div></div>";
+                endwhile;
+                wp_reset_postdata();
+              } 
+            ?>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="phong-tro" role="tabpanel" aria-labelledby="tab-phong-tro">
+          <div>
+            <?php
+              $post = array(
+                'post_status'   => 'publish',
+                'post_type' => 'post', 
+                'posts_per_page' => 9,   
+                'tax_query' => array(
+                  array(
+                      'taxonomy' => 'category',
+                      'field' => 'term_id',
+                      'terms' => '9',
+                  ) )
+              );
+            
+              $getPost = new WP_Query($post );
+              if($getPost->have_posts()) {  	
+                while ($getPost->have_posts() ) : $getPost->the_post();
+                  $postid = get_the_ID();          
+                  //$loaitinrao_post = get_post_meta($postid, 'loaitinrao_post', true );
+                  $dientich_post = get_post_meta($postid, 'dientich_post', true );
+                  $dientich_post = trim($dientich_post);
+                  $phongtam_post = get_post_meta(get_the_id(),'phongtam_post',true);
+                  $phongngu_post = get_post_meta(get_the_id(),'phongngu_post',true);
+                  $gia_post = get_post_meta($postid, 'gia_post', true );
+                  $address_post = get_post_meta($postid, 'address_post', true );
+                  echo '<div class="col-12 item-real box-real boxshadow-none my-4 px-4 py-2"><div class="row">';
+                    echo '<div class="col-4 col-lg-3 px-0">';
+                      echo '<a class="post-media h-100 d-block" href="'.get_the_permalink().'" title="'.get_the_title().'">';
+                        if(get_post_thumbnail_id($postid)) {
+                          echo '<div class="img-wrap">'.get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid d-block mx-auto','alt' => get_the_title(),'loading' => 'lazy')).'</div>';
+                        } else {
+                          echo"<div class='bg-img img-wrap'><img src='".get_template_directory_uri()."/assets/images/logo.png' alt='".get_bloginfo( 'name' )."' class='img-fluid d-block mx-auto'></div>";
+                        }
+                      echo '</a>';
+                    echo '</div>';                        
+                    echo '<div class="col-8 col-lg-9">';
+                        echo '<div class="h-100"><a class="d-block" href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize my-1">'. get_the_title() .'</h4></a>';   
+                        echo '<div class="block-att">';
+                          if($gia_post) {
+                            echo '<div class="my-1"><i class="fa fa-usd"></i> Giá: <span class="listing-price">'.$gia_post.'</span></div>';
+                          }
+                          echo '<div class="listing-info d-flex flex-wrap align-items-center">';
+                          if($phongngu_post) {
+                            echo '<div><i class="fa fa-bed mr-1 my-1" aria-hidden="true"></i>'.$phongngu_post.'</div>';
+                          }
+                          if($phongtam_post) {
+                            echo '<div><i class="fa fa-bath mr-1 my-1" aria-hidden="true"></i>'.$phongtam_post.'</div>';
+                          }
+                          if($dientich_post) {
+                            echo '<div><i class="fa fa-object-group mr-1 my-1" aria-hidden="true"></i>Diện tích: <strong>'.$dientich_post.'</strong></div>';
+                          }
+                        echo '</div>';
+                        echo '<div class="des-mute d-flex flex-nowrap mt-2">';
+                          if($address_post) {
+                            echo '<i class="fa fa-map-marker mr-1" aria-hidden="true"></i><span class="text-capitalize">'.$address_post.'</span>';
+                          }				 
+                        echo'</div>';
+                    echo '</div></div>';
+                    echo "</div>";
+                  echo "</div></div>";
+                endwhile;
+                wp_reset_postdata();
+              } 
+            ?>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="can-ho-chungcu" role="tabpanel" aria-labelledby="tab-can-ho-chungcu">
+        <div>
+            <?php
+              $post = array(
+                'post_status'   => 'publish',
+                'post_type' => 'post', 
+                'posts_per_page' => 9,   
+                'tax_query' => array(
+                  array(
+                      'taxonomy' => 'category',
+                      'field' => 'term_id',
+                      'terms' => '7',
+                  ) )
+              );            
+              $getPost = new WP_Query($post );
+              if($getPost->have_posts()) {  	
+                while ($getPost->have_posts() ) : $getPost->the_post();
+                  $postid = get_the_ID();          
+                  //$loaitinrao_post = get_post_meta($postid, 'loaitinrao_post', true );
+                  $dientich_post = get_post_meta($postid, 'dientich_post', true );
+                  $dientich_post = trim($dientich_post);
+                  $phongtam_post = get_post_meta(get_the_id(),'phongtam_post',true);
+                  $phongngu_post = get_post_meta(get_the_id(),'phongngu_post',true);
+                  $gia_post = get_post_meta($postid, 'gia_post', true );
+                  $address_post = get_post_meta($postid, 'address_post', true );
+                  echo '<div class="col-12 item-real box-real boxshadow-none my-4 px-4 py-2"><div class="row">';
+                    echo '<div class="col-4 col-lg-3 px-0">';
+                      echo '<a class="post-media h-100 d-block" href="'.get_the_permalink().'" title="'.get_the_title().'">';
+                        if(get_post_thumbnail_id($postid)) {
+                          echo '<div class="img-wrap">'.get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid d-block mx-auto','alt' => get_the_title(),'loading' => 'lazy')).'</div>';
+                        } else {
+                          echo"<div class='bg-img img-wrap'><img src='".get_template_directory_uri()."/assets/images/logo.png' alt='".get_bloginfo( 'name' )."' class='img-fluid d-block mx-auto'></div>";
+                        }
+                      echo '</a>';
+                    echo '</div>';                        
+                    echo '<div class="col-8 col-lg-9">';
+                        echo '<div class="h-100"><a class="d-block" href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize my-1">'. get_the_title() .'</h4></a>';   
+                        echo '<div class="block-att">';
+                          if($gia_post) {
+                            echo '<div class="my-1"><i class="fa fa-usd"></i> Giá: <span class="listing-price">'.$gia_post.'</span></div>';
+                          }
+                          echo '<div class="listing-info d-flex flex-wrap align-items-center">';
+                          if($phongngu_post) {
+                            echo '<div><i class="fa fa-bed mr-1 my-1" aria-hidden="true"></i>'.$phongngu_post.'</div>';
+                          }
+                          if($phongtam_post) {
+                            echo '<div><i class="fa fa-bath mr-1 my-1" aria-hidden="true"></i>'.$phongtam_post.'</div>';
+                          }
+                          if($dientich_post) {
+                            echo '<div><i class="fa fa-object-group mr-1 my-1" aria-hidden="true"></i>Diện tích: <strong>'.$dientich_post.'</strong></div>';
+                          }
+                        echo '</div>';
+                        echo '<div class="des-mute d-flex flex-nowrap mt-2">';
+                          if($address_post) {
+                            echo '<i class="fa fa-map-marker mr-1" aria-hidden="true"></i><span class="text-capitalize">'.$address_post.'</span>';
+                          }				 
+                        echo'</div>';
+                    echo '</div></div>';
+                    echo "</div>";
+                  echo "</div></div>";
+                endwhile;
+                wp_reset_postdata();
+              } 
+            ?>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="van-phong" role="tabpanel" aria-labelledby="tab-van-phong">
+        <div>
+            <?php
+              $post = array(
+                'post_status'   => 'publish',
+                'post_type' => 'post', 
+                'posts_per_page' => 9,   
+                'tax_query' => array(
+                  array(
+                      'taxonomy' => 'category',
+                      'field' => 'term_id',
+                      'terms' => '8',
+                  ) )
+              );
+            
+              $getPost = new WP_Query($post );
+              if($getPost->have_posts()) {  	
+                while ($getPost->have_posts() ) : $getPost->the_post();
+                  $postid = get_the_ID();          
+                  //$loaitinrao_post = get_post_meta($postid, 'loaitinrao_post', true );
+                  $dientich_post = get_post_meta($postid, 'dientich_post', true );
+                  $dientich_post = trim($dientich_post);
+                  $phongtam_post = get_post_meta(get_the_id(),'phongtam_post',true);
+                  $phongngu_post = get_post_meta(get_the_id(),'phongngu_post',true);
+                  $gia_post = get_post_meta($postid, 'gia_post', true );
+                  $address_post = get_post_meta($postid, 'address_post', true );
+                  echo '<div class="col-12 item-real box-real boxshadow-none my-4 px-4 py-2"><div class="row">';
+                    echo '<div class="col-4 col-lg-3 px-0">';
+                      echo '<a class="post-media h-100 d-block" href="'.get_the_permalink().'" title="'.get_the_title().'">';
+                        if(get_post_thumbnail_id($postid)) {
+                          echo '<div class="img-wrap">'.get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid d-block mx-auto','alt' => get_the_title(),'loading' => 'lazy')).'</div>';
+                        } else {
+                          echo"<div class='bg-img img-wrap'><img src='".get_template_directory_uri()."/assets/images/logo.png' alt='".get_bloginfo( 'name' )."' class='img-fluid d-block mx-auto'></div>";
+                        }
+                      echo '</a>';
+                    echo '</div>';                        
+                    echo '<div class="col-8 col-lg-9">';
+                        echo '<div class="h-100"><a class="d-block" href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize my-1">'. get_the_title() .'</h4></a>';   
+                        echo '<div class="block-att">';
+                          if($gia_post) {
+                            echo '<div class="my-1"><i class="fa fa-usd"></i> Giá: <span class="listing-price">'.$gia_post.'</span></div>';
+                          }
+                          echo '<div class="listing-info d-flex flex-wrap align-items-center">';
+                          if($phongngu_post) {
+                            echo '<div><i class="fa fa-bed mr-1 my-1" aria-hidden="true"></i>'.$phongngu_post.'</div>';
+                          }
+                          if($phongtam_post) {
+                            echo '<div><i class="fa fa-bath mr-1 my-1" aria-hidden="true"></i>'.$phongtam_post.'</div>';
+                          }
+                          if($dientich_post) {
+                            echo '<div><i class="fa fa-object-group mr-1 my-1" aria-hidden="true"></i>Diện tích: <strong>'.$dientich_post.'</strong></div>';
+                          }
+                        echo '</div>';
+                        echo '<div class="des-mute d-flex flex-nowrap mt-2">';
+                          if($address_post) {
+                            echo '<i class="fa fa-map-marker mr-1" aria-hidden="true"></i><span class="text-capitalize">'.$address_post.'</span>';
+                          }				 
+                        echo'</div>';
+                    echo '</div></div>';
+                    echo "</div>";
+                  echo "</div></div>";
+                endwhile;
+                wp_reset_postdata();
+              } 
+            ?>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="bg-gray py-4">
-    <div class="container ">
-      <div class="row">
-        <div class="col-12 col-lg-6">
-          <h3 class="title-block d-flex flex-wrap align-items-center"><strong class="text-uppercase">Nhà mặt phố, shophouse</strong><a title="Nhà mặt phố, shophouse" href="<?php bloginfo('url'); ?>/loai-bat-dong-san/nha-mat-pho" class="view-all ml-auto">Xem tất cả <i class="ml-1 fa fa-plus"></i></a></h3>
-          <div class="block-gray">
-            <?php echo get_loai_bds('nha-pho-shophouse,nha-mat-pho',6); ?>            
-          </div>
+    <div class="col-md-5 col-lg-4">
+      <div class="sidebar">
+        <h3 class="font-weight-normal text-uppercase">
+        <span><i class="fa fa-bars"></i> Tin tức mới</span>
+        </h3>
+        <div>
+          <?php if(function_exists('news_home')){ echo news_home(); } ?>        
         </div>
-        <div class="col-12 col-lg-6">
-          <h3 class="title-block d-flex flex-wrap align-items-center"><strong class="text-uppercase">Nhà riêng</strong><a title="Nhà riêng" href="<?php bloginfo('url'); ?>/loai-bat-dong-san/nha-rieng" class="view-all ml-auto">Xem tất cả <i class="ml-1 fa fa-plus"></i></a></h3>
-          <div class="block-gray">
-            <?php echo get_loai_bds('nha-rieng',6); ?>                    
-          </div>
-        </div>
-      </div>
-    </div>    
-  </div>
-  <div class="container py-4">
-    <div class="row">
-      <div class="col-12">
-        <h3 class="title-block d-flex flex-wrap align-items-center"><strong class="text-uppercase">Văn phòng, Nhà cho thuê</strong><a title="Văn phòng, Nhà cho thuê" href="<?php bloginfo('url'); ?>/loai-bat-dong-san/van-phong" class="view-all ml-auto">Xem tất cả <i class="ml-1 fa fa-plus"></i></a></h3>
-        <div class="block-gray">
-          <?php echo get_loai_bds('van-phong,nha-tro,phong-tro',12); ?>          
-        </div>
-      </div>      
-      <!-- <div class="col-12 col-lg-6">
-        <h3 class="title-block d-flex flex-wrap align-items-center"><strong class="text-uppercase">Condotel, Penthouse, Officetel</strong><a title="Condotel, Penthouse, Officetel" href="<?php bloginfo('url'); ?>/loai-bat-dong-san/can-ho-condotel" class="view-all ml-auto">Xem tất cả <i class="ml-1 fa fa-plus"></i></a></h3>
-        <div class="block-gray">
-          <?php echo get_loai_bds('can-ho-condotel,can-ho-officetel,can-ho-mini',6); ?>          
-        </div>
-      </div> -->
-    </div>
-  </div>
-  <div class="bg-gray py-4">
-    <div class="container">
-      <div class="row">      
-        <div class="col-12 col-lg-6">
-          <h3 class="title-block d-flex flex-wrap align-items-center"><strong class="text-uppercase">Biệt thự</strong><a title="Biệt thự" href="<?php bloginfo('url'); ?>/loai-bat-dong-san/biet-thu-lien-ke" class="view-all ml-auto">Xem tất cả <i class="ml-1 fa fa-plus"></i></a></h3>
-          <div class="block-gray">
-            <?php echo get_loai_bds('biet-thu-don-lap,biet-thu-lien-ke,biet-thu-nghi-duong,biet-thu-song-lap',6); ?>            
-          </div>
-        </div>
-        <div class="col-12 col-lg-6">
-          <h3 class="title-block d-flex flex-wrap align-items-center"><strong class="text-uppercase">Đất nền</strong><a title="Đất nền" href="<?php bloginfo('url'); ?>/loai-bat-dong-san/dat-nen" class="view-all ml-auto">Xem tất cả <i class="ml-1 fa fa-plus"></i></a></h3>
-          <div class="block-gray">
-            <?php echo get_loai_bds('dat-nen',6); ?>                  
-          </div>
-        </div>      
       </div>
     </div>
-  </div>
-  <div class="container py-4">  
-    <div class="row">      
-      <div class="col-12 col-lg-6">
-        <h3 class="title-block d-flex flex-wrap align-items-center"><strong class="text-uppercase">Nhà xưởng kho bãi</strong><a title="Nhà xưởng kho bãi" href="<?php bloginfo('url'); ?>/loai-bat-dong-san/nha-xuong-kho-bai" class="view-all ml-auto">Xem tất cả <i class="ml-1 fa fa-plus"></i></a></h3>
-        <div class="block-gray">
-          <?php echo get_loai_bds('nha-xuong-kho-bai,nha-xuong',6); ?>             
-        </div>
-      </div>
-      <div class="col-12 col-lg-6">
-        <h3 class="title-block d-flex flex-wrap align-items-center"><strong class="text-uppercase">Bất động sản khác</strong><a title="Bất động sản khác" href="<?php bloginfo('url'); ?>/loai-bat-dong-san/bat-dong-san-khac" class="view-all ml-auto">Xem tất cả <i class="ml-1 fa fa-plus"></i></a></h3>
-        <div class="block-gray">
-          <?php echo get_loai_bds('bat-dong-san-khac',6); ?>             
-        </div>
-      </div>
-    </div>   
   </div>
 </div>
-<div class="news-home py-5 bg-gray">
+
+
+<div class="khuvuc py-5 bg-gray">
   <div class="container">
-    <h3 class="title-block d-flex flex-wrap align-items-center text-uppercase"><strong>Tin tức mới nhất</strong></h3>
-    <div class="desc-mute">
-      Tin tức mới nhất, phân tích xu hướng thị trường, cập nhật nhanh chóng và chính xác hàng ngày
-    </div>
-    <?php if(function_exists('news_home')){ echo news_home(); } ?>
+    <h3 class="title-block d-flex flex-wrap align-items-center text-uppercase"><strong>Bất động sản theo địa điểm</strong></h3>
+    <div class="row space-m">
+      <?php
+        $terms = get_terms(array('taxonomy' => 'khuvucbds','hide_empty' => false,'orderby' => 'id','order' => 'ASC','parent'   => 0));   
+        $stt = 1;
+        $loop1 = '';
+        $loop2 = '<div class="col-12 col-md-6"><div class="row">';
+        $loop3 = '';
+        foreach($terms as $term){
+          $image_id = get_term_meta ( $term -> term_id, 'category-image-id', true );
+          $img_url = wp_get_attachment_image_src($image_id, 'full')[0];
+          if($stt == 1) {
+            $loop1 .= '<div class="col-12 col-md-6 my-3">
+            <a href="'.get_term_link($term->slug, 'khuvucbds').'" title="'.$term->name.'" class="d-block position-relative rounded overflow-hidden h-100">
+              <div class="img-wrap h-100"><img src="'.$img_url.'" class="img-fluid d-block mx-auto wp-post-image" alt="'.$term->name.'" loading="lazy"></div>
+              <div class="content position-absolute text-white d-flex align-items-center justify-content-center text-center">
+                <div>
+                  <h5 class="font-weight-bold text-capitalize">'.$term->name.'</h5>
+                  <div>0 Bất động sản tại '.$term->name.'</div>
+                </div>
+              </div>
+            </a>
+          </div>';
+          } else if($stt == 2 || $stt == 3 || $stt == 4 || $stt == 5) {
+            $loop2 .='<div class="col-6 my-3">
+              <a href="'.get_term_link($term->slug, 'khuvucbds').'" title="'.$term->name.'" class="d-block position-relative rounded overflow-hidden">
+                <div class="img-wrap"><img src="'.$img_url.'" class="img-fluid d-block mx-auto wp-post-image" alt="'.$term->name.'" loading="lazy"></div>
+                <div class="content position-absolute text-white d-flex align-items-center justify-content-center text-center">
+                  <div>
+                    <h5 class="font-weight-bold text-capitalize">'.$term->name.'</h5>
+                    <div>0 Bất động sản tại '.$term->name.'</div>
+                  </div>
+                </div>
+              </a>
+            </div>';
+          } else {
+            $loop3 .= '<div class="col-6 col-md-3 my-3">
+            <a href="'.get_term_link($term->slug, 'khuvucbds').'" title="'.$term->name.'" class="d-block position-relative rounded overflow-hidden">
+              <div class="img-wrap"><img src="'.$img_url.'" class="img-fluid d-block mx-auto wp-post-image" alt="'.$term->name.'" loading="lazy"></div>
+              <div class="content position-absolute text-white d-flex align-items-center justify-content-center text-center">
+                <div>
+                  <h5 class="font-weight-bold text-capitalize">'.$term->name.'</h5>
+                  <div>0 Bất động sản tại '.$term->name.'</div>
+                </div>
+              </div>
+            </a>
+          </div>';
+          }
+          $stt ++;
+        }
+        echo $loop1;
+        $loop2 .= '</div></div>';
+        echo $loop2;
+        echo $loop3;
+      ?>
+    </div>    
   </div>
 </div>
 <?php

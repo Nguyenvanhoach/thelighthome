@@ -901,11 +901,11 @@ add_action( 'init', 'revcon_change_post_object' );
 
 add_post_type_support( 'page', 'excerpt' );
 
-	/*start crumbs*/
+/*start crumbs*/
 $opt 						= array();
-$opt['home'] 				= "Trang chủ";
+$opt['home'] 				= '<i class="fa fa-home mr-1"></i>Trang chủ';
 $opt['blog'] 				= "";
-$opt['sep'] 				= "<i class='fa fa-angle-double-right'></i>";
+$opt['sep'] 				= '<i class="fa fa-angle-right mx-1" style="color: #646464;"></i>';
 $opt['prefix']				= "";
 $opt['boldlast'] 			= true;
 $opt['nofollowhome'] 		= true;
@@ -921,7 +921,7 @@ function bt_breadcrumb($prefix = '', $suffix = '', $display = true) {
 		function bold_or_not($input) {
 			$opt = get_option("bt_breadcrumbs");
 			if ($opt['boldlast']) {
-				return '<strong class="current">'.$input.'</strong>';
+				return '<span class="current">'.$input.'</span>';
 			} else {
 				return $input;
 			}
@@ -978,7 +978,7 @@ function bt_breadcrumb($prefix = '', $suffix = '', $display = true) {
 			}
 		}
 		if ( is_category() )
-		{
+		{ 
 			$cat = intval( get_query_var('cat') );
 			$output .= bt_get_category_parents($cat, false, " ".$opt['sep']." ");
 		} elseif ( is_tag() )
@@ -1020,22 +1020,24 @@ function bt_breadcrumb($prefix = '', $suffix = '', $display = true) {
 					//$output .=$opt['sep']. ' '. '<a rel="nofollow" href="'.  $link . '">'. $terms[$i]->name .'</a> ';
 			}
 		} else {
-               if($post->post_type !='page')
-               {
-                 $post_type_label = $opt['blog'];
-                 if($post->post_type !='post') {
-                      global $wp_post_types;
-                      $obj = $wp_post_types[$post->post_type];
-                      $post_type_label = $obj->labels->name;
-                  }
-                  $page= get_page_by_title($post_type_label, 'OBJECT', 'page');
-                  $output .= '<a rel="nofollow" href="'. get_permalink($page->ID). '">'. $post_type_label.'</a>';
-                  //wp_die($post->post_type);
-                 if(is_singular('post')){}
-                 else
-                 	$output .= ' '.$opt['sep'].' ';
-            }
-            $output .= bold_or_not(get_the_title());
+				if($post->post_type !='page')
+				{
+					$post_type_label = $opt['blog'];
+					if($post->post_type !='post') {
+							global $wp_post_types;
+							$obj = $wp_post_types[$post->post_type];
+							$post_type_label = $obj->labels->name;
+					}
+					$page= get_page_by_title($post_type_label, 'OBJECT', 'page');
+					if($page) {
+						$output .= '<a rel="nofollow" href="'. get_permalink($page->ID). '">'. $post_type_label.'</a>';
+					}
+					//wp_die($post->post_type);
+					if(is_singular('post')){}
+					else
+					$output .= ' '.$opt['sep'].' ';
+		}
+		$output .= bold_or_not(get_the_title());
 		}
 	} else {
 		$post = $wp_query->get_queried_object();
@@ -1089,8 +1091,8 @@ function bt_breadcrumb($prefix = '', $suffix = '', $display = true) {
 		return $prefix.$output.$suffix;
 	}
 }
-function the_breadcrumb() {
-		bt_breadcrumb('<div id="crumbs">','</div>');
+function breadcrumb() {
+		bt_breadcrumb('<div id="crumbs" class="list-crumb text-capitalize">','</div>');
 	return;
 }
 /*end crumbs*/
@@ -1277,21 +1279,21 @@ function add_DienTich_taxonomies() {
 }
 add_action( 'init', 'add_DienTich_taxonomies', 0 );
 
-function add_priceBatds_taxonomies() {
-	register_taxonomy('pricebds', 'post', array(
+function add_khuvucBatds_taxonomies() {
+	register_taxonomy('khuvucbds', 'post', array(
 		// This array of options controls the labels displayed in the WordPress Admin UI
 		'labels' => array(
-			'name' => _x( 'Mức Giá', 'taxonomy general name' ),
-			'singular_name' => _x( 'Mức Giá', 'taxonomy singular name' ),
-			'search_items' =>  __( 'Tìm Kiếm Mức Giá' ),
-			'all_items' => __( 'All Prices' ),
-			'parent_item' => __( 'Parents Prices' ),
-			'parent_item_colon' => __( 'Parent Price:' ),
-			'edit_item' => __( 'Edit Price' ),
-			'update_item' => __( 'Update Price' ),
-			'add_new_item' => __( 'Add New Price' ),
-			'new_item_name' => __( 'New Price Name' ),
-			'menu_name' => __( 'Mức Giá' ),
+			'name' => _x( 'Khu vực', 'taxonomy general name' ),
+			'singular_name' => _x( 'Khu Vực', 'taxonomy singular name' ),
+			'search_items' =>  __( 'Tìm Kiếm Khu Vực' ),
+			'all_items' => __( 'Tất cả các Khu Vực' ),
+			'parent_item' => __( 'Parents Location' ),
+			'parent_item_colon' => __( 'Parent Location:' ),
+			'edit_item' => __( 'Edit Location' ),
+			'update_item' => __( 'Update Location' ),
+			'add_new_item' => __( 'Add New Location' ),
+			'new_item_name' => __( 'New Location Name' ),
+			'menu_name' => __( 'Khu Vực' ),
 		),
 		// Control the slugs used for this taxonomy
 		// Hierarchical taxonomy (like categories)
@@ -1301,10 +1303,10 @@ function add_priceBatds_taxonomies() {
 		'show_ui' => true,
 			'show_in_rest' => true,
 			'show_admin_column' => true,
-		'rewrite' => array('slug' => 'muc-gia'),'orderby' => 'id','order' => 'ASC',
+		'rewrite' => array('slug' => 'khu-vuc'),'orderby' => 'id','order' => 'ASC',
 	));
 }
-add_action( 'init', 'add_priceBatds_taxonomies', 0 );
+add_action( 'init', 'add_khuvucBatds_taxonomies', 0 );
 
 function add_LoaiBDS_taxonomies() {
 	// Add new "LoaiBDS" taxonomy to Posts
@@ -1365,6 +1367,117 @@ function get_children_tax($nameTax) {
 	}	
 	echo "</ul>";
 }
+
+add_action('init', 'my_category_module');
+function my_category_module() {
+	add_action( 'category_add_form_fields',  'add_category_image' , 10, 2 );
+	add_action( 'created_category',  'save_category_image' , 10, 2 );
+	add_action( 'category_edit_form_fields',  'update_category_image' , 10, 2 );
+	add_action( 'edited_category',  'updated_category_image' , 10, 2 );
+
+	add_action( 'khuvucbds_add_form_fields', 'add_category_image', 10, 2 ); 
+	add_action( 'created_khuvucbds',  'save_category_image' , 10, 2 );
+	add_action( 'khuvucbds_edit_form_fields',  'update_category_image' , 10, 2 );
+	add_action( 'edited_khuvucbds',  'updated_category_image' , 10, 2 );
+
+	add_action( 'admin_enqueue_scripts', 'load_media' );
+	add_action( 'admin_footer',  'add_script' );
+}
+function load_media() {
+ wp_enqueue_media();
+}
+function add_category_image ( $taxonomy ) { ?>
+   <div class="form-field term-group">
+     <label for="category-image-id"><?php _e('Image', 'hero-theme'); ?></label>
+     <input type="hidden" id="category-image-id" name="category-image-id" class="custom_media_url" value="">
+     <div id="category-image-wrapper"></div>
+     <p>
+       <input type="button" class="button button-secondary ct_tax_media_button" id="ct_tax_media_button" name="ct_tax_media_button" value="<?php _e( 'Add Image', 'hero-theme' ); ?>" />
+       <input type="button" class="button button-secondary ct_tax_media_remove" id="ct_tax_media_remove" name="ct_tax_media_remove" value="<?php _e( 'Remove Image', 'hero-theme' ); ?>" />
+    </p>
+   </div>
+<?php }
+function save_category_image ( $term_id, $tt_id ) {
+   if( isset( $_POST['category-image-id'] ) && '' !== $_POST['category-image-id'] ){
+     $image = $_POST['category-image-id'];
+     add_term_meta( $term_id, 'category-image-id', $image, true );
+   }
+}
+function update_category_image ( $term, $taxonomy ) { ?>
+   <tr class="form-field term-group-wrap">
+     <th scope="row">
+       <label for="category-image-id"><?php _e( 'Image', 'hero-theme' ); ?></label>
+     </th>
+     <td>
+       <?php $image_id = get_term_meta ( $term -> term_id, 'category-image-id', true ); ?>
+       <input type="hidden" id="category-image-id" name="category-image-id" value="<?php echo $image_id; ?>">
+       <div id="category-image-wrapper">
+         <?php if ( $image_id ) { ?>
+           <?php echo wp_get_attachment_image ( $image_id, 'thumbnail' ); ?>
+         <?php } ?>
+       </div>
+       <p>
+         <input type="button" class="button button-secondary ct_tax_media_button" id="ct_tax_media_button" name="ct_tax_media_button" value="<?php _e( 'Add Image', 'hero-theme' ); ?>" />
+         <input type="button" class="button button-secondary ct_tax_media_remove" id="ct_tax_media_remove" name="ct_tax_media_remove" value="<?php _e( 'Remove Image', 'hero-theme' ); ?>" />
+       </p>
+     </td>
+   </tr>
+<?php }
+function updated_category_image ( $term_id, $tt_id ) {
+   if( isset( $_POST['category-image-id'] ) && '' !== $_POST['category-image-id'] ){
+     $image = $_POST['category-image-id'];
+     update_term_meta ( $term_id, 'category-image-id', $image );
+   } else {
+     update_term_meta ( $term_id, 'category-image-id', '' );
+   }
+}
+function add_script() { ?>
+   <script>
+     jQuery(document).ready( function($) {
+       function ct_media_upload(button_class) {
+         var _custom_media = true,
+         _orig_send_attachment = wp.media.editor.send.attachment;
+         $('body').on('click', button_class, function(e) {
+           var button_id = '#'+$(this).attr('id');
+           var send_attachment_bkp = wp.media.editor.send.attachment;
+           var button = $(button_id);
+           _custom_media = true;
+           wp.media.editor.send.attachment = function(props, attachment){
+             if ( _custom_media ) {
+               $('#category-image-id').val(attachment.id);
+               $('#category-image-wrapper').html('<img class="custom_media_image" src="" style="margin:0;padding:0;max-height:100px;float:none;" />');
+               $('#category-image-wrapper .custom_media_image').attr('src',attachment.url).css('display','block');
+             } else {
+               return _orig_send_attachment.apply( button_id, [props, attachment] );
+             }
+            }
+         wp.media.editor.open(button);
+         return false;
+       });
+     }
+     ct_media_upload('.ct_tax_media_button.button'); 
+     $('body').on('click','.ct_tax_media_remove',function(){
+       $('#category-image-id').val('');
+       $('#category-image-wrapper').html('<img class="custom_media_image" src="" style="margin:0;padding:0;max-height:100px;float:none;" />');
+     });
+     // Thanks: http://stackoverflow.com/questions/15281995/wordpress-create-category-ajax-response
+     $(document).ajaxComplete(function(event, xhr, settings) {
+       var queryStringArr = settings.data.split('&');
+       if( $.inArray('action=add-tag', queryStringArr) !== -1 ){
+         var xml = xhr.responseXML;
+         $response = $(xml).find('term_id').text();
+         if($response!=""){
+           // Clear the thumb image
+           $('#category-image-wrapper').html('');
+         }
+       }
+     });
+   });
+ </script>
+<?php }
+
+
+
 function showTaxomi($id) {
 	$terms = get_terms(array('taxonomy' => $id,'hide_empty' => false,'orderby' => 'id','order' => 'ASC',));                             
     foreach($terms as $term){
@@ -1629,11 +1742,13 @@ function bdsttp_thongtin_output($post) {
 					<input type="text" class="style-input" name="gia_post" value="<?php echo esc_attr($gia_post); ?>" />
 			 	</div>
 			 	<div class="col-box-6">
-			 		<label class="pd-l">Đơn vị giá: &nbsp;</label>
+			 		<label class="pd-l">Đơn vị: &nbsp;</label>
 			 		<select name="donvi_price_post" class="select-auto">
-						<option value="0"  <?php selected($donvi_price_post, '0' ); ?>>Thỏa thuận</option>
-						<option value="1000000"  <?php selected($donvi_price_post, '1000000' ); ?>>Triệu</option>
-						<option value="1000000000"  <?php selected($donvi_price_post, '1000000000' ); ?>>Tỷ</option>
+					 	<option value="">Chọn đơn vị</option>
+						<option value="Tháng"  <?php selected($donvi_price_post, 'Tháng' ); ?>>Tháng</option>
+						<option value="Năm"  <?php selected($donvi_price_post, 'Năm' ); ?>>Năm</option>
+						<option value="Nền"  <?php selected($donvi_price_post, 'Nền' ); ?>>Nền</option>
+						<option value="Căn"  <?php selected($donvi_price_post, 'Căn' ); ?>>Căn</option>
 					</select>
 			 	</div>
 	 		</div>
@@ -1781,6 +1896,7 @@ function bdsttp_thongtin_output($post) {
 	 	</div>
 	 	<div class="col-box-8">
 	 		<select class="full-width" name="phaply_post">
+			 	<option value="">Chọn pháp lý</option>
 	 			<option value="Sổ Hồng Riêng" <?php selected($phaply_post, 'Sổ Hồng Riêng' ); ?>>Sổ Hồng Riêng</option>
 	 			<option value="Sổ Riêng" <?php selected($phaply_post, 'Sổ Riêng' ); ?>>Sổ Riêng</option>
 	 			<option value="Sổ Chung" <?php selected($phaply_post, 'Sổ Chung' ); ?>>Sổ Chung</option>
@@ -2182,7 +2298,7 @@ add_action('admin_footer', 'script_footer');
 add_action( 'admin_footer', 'rv_custom_dashboard_widget' );
 function rv_custom_dashboard_widget(){if(get_current_screen()->base !== 'dashboard'){return;}?>
  <div id="custom-id" class="welcome-panel" style="display: none;">
- 	<h3 style="margin-top: 0">CHÀO MỪNG BẠN ĐẾN VỚI TRANG QUẢN TRỊ WEBSITE BẤT ĐỘNG SẢN SANSALAND.</h3>
+ 	<h3 style="margin-top: 0">CHÀO MỪNG BẠN ĐẾN VỚI TRANG QUẢN TRỊ WEBSITE BẤT ĐỘNG SẢN THELIGHTHOME.</h3>
 	<p><strong>THÔNG TIN WEBSITE:</strong></p>
 	<p><?php echo bloginfo( 'name' ); ?> | <?php echo bloginfo( 'description' ); ?></p>
 	<p>Website được phát triển bởi <strong><a href="https://www.facebook.com/nguyenvanhoach89">Nguyễn Văn Hoạch</a></strong>.</p>
@@ -2344,7 +2460,7 @@ function news_slidebar($post_page = '10') {
 	wp_reset_postdata();
 }
 
-function news_home($post_page = '6') {
+function news_home($post_page = '8') {
 	$args = array(
 	'post_type' => 'tin_tuc',
 	'post_status' => 'publish',
@@ -2352,47 +2468,21 @@ function news_home($post_page = '6') {
 	);
 	$the_query = new WP_Query($args);
 	if ( $the_query->have_posts() ) {	
-		$string .='<div class="row my-3 my-lg-4">';
-		$stt = 1;
 		while ( $the_query->have_posts() ) {
 			$the_query->the_post();		
-			if($stt == 1) {
-				if ( has_post_thumbnail() ) {
-					$string .= '<div class="col-12 col-lg-7 my-3 my-lg-2 first-news"><div class="news-home-inner position-relative">
-			          	<a class="post-media d-block h-100" href="' . get_the_permalink() .'" title="' . get_the_title() .'" ><div class="img-wrap">' .get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid mx-auto d-block','alt' => get_the_title(), 'loading'=> 'lazy') ).'</div></a>
-				        <div class="post-content px-lg-2 pt-3 pb-lg-3">
-				          <h3 class="text-capitalize title-item-post pb-lg-2"><a href="' . get_the_permalink() .'" title="' . get_the_title() .'" >' .get_the_title() .'</a></h3>
-				          <div>'. trim_text_to_words(get_the_content(), 150) . '</div>
-				        </div></div>
-				    </div><div class="col-12 col-lg-5"><div class="row">';
-				} 
-			} else {
-				if ( has_post_thumbnail() ) {
-					$string .= '<div class="col-12 my-2 my-lg-2">
-						<div class="row">
-							<div class="col-4">
-								<div class="news-home-inner h-100">
-						          	<a class="post-media d-block" href="' . get_the_permalink() .'" title="' . get_the_title() .'" ><div class="img-wrap">' .get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid mx-auto d-block','alt' => get_the_title(), 'loading'=> 'lazy') ).'</div></a>
-						        </div>
-						    </div>
-						    <div class="col-8 pl-0">
-						    	<div class="news-home-inner h-100">
-							        <div class="post-content px-2 pb-2">
-							          <h3 class="text-capitalize title-item-post"><a href="' . get_the_permalink() .'" title="' . get_the_title() .'" >' .get_the_title() .'</a></h3>
-							          <div>'. trim_text_to_words(get_the_content(), 80) . '</div>
-							        </div>
-							    </div>
+			if ( has_post_thumbnail() ) {
+				echo'<div class="row"><div class="col-4 pr-0 my-2"><div class="news-home-inner h-100"><a class="post-media d-block" href="' . get_the_permalink() .'" title="' . get_the_title() .'" ><div class="img-wrap">' .get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid mx-auto d-block','alt' => get_the_title(), 'loading'=> 'lazy') ).'</div></a></div></div>
+					<div class="col-8 my-2">
+						<div class="news-home-inner h-100">
+							<div class="post-content">
+								<div class="text-capitalize title-item-post mb-0"><a href="' . get_the_permalink() .'" title="' . get_the_title() .'" >' .get_the_title() .'</a></div>
 							</div>
-					    </div>
-				    </div>';
-				} 				
-			}
-
-			$stt++;
+						</div>
+					</div>
+				</div>';
+			} 				
 		}
-	$string .= '</div></div></div>';
-	}else{/*no posts found*/}
-	return $string;
+	}
 	/* Restore original Post Data */
 	wp_reset_postdata();
 }
@@ -2478,7 +2568,7 @@ function bds_noibat($posts_per_page) {
 
   $getPost = new WP_Query($post );
   if($getPost->have_posts()) {  	
-  	echo"<div class='row space-1'>";
+  	echo"<div class='row space-2'>";
 	    while ($getPost->have_posts() ) : $getPost->the_post();
 	      	$postid = get_the_ID();          
 	      	//$loaitinrao_post = get_post_meta($postid, 'loaitinrao_post', true );
@@ -2489,7 +2579,7 @@ function bds_noibat($posts_per_page) {
 	      	$gia_post = get_post_meta($postid, 'gia_post', true );
 	      	$address_post = get_post_meta($postid, 'address_post', true );
 	      	
-	        echo '<div class="col-6 col-lg-4 my-3">
+	        echo '<div class="col-6 col-md-4 col-lg-3 my-3">
 	          	<div class="item-real box-real h-100">';
 	          		echo '<a href="'.get_the_permalink().'" title="'.get_the_title().'">';
 		                if(get_post_thumbnail_id($postid)) {
@@ -2516,10 +2606,10 @@ function bds_noibat($posts_per_page) {
 					            }
 					        echo '</div>';
 						echo '</div>';
-						echo '<div class="my-1 block-att"><i class="fa fa-calendar"></i>  '.get_the_time('d-m-Y').'</div>';
+						// echo '<div class="my-1 block-att"><i class="fa fa-calendar"></i>  '.get_the_time('d-m-Y').'</div>';
 						echo '<div class="des-mute d-flex flex-nowrap mt-2">';
 							if($address_post) {
-								echo '<i class="fa fa-map-marker mr-2" aria-hidden="true"></i><span class="text-capitalize">'.$address_post.'</span>';
+								echo '<i class="fa fa-map-marker mr-1" aria-hidden="true"></i><span class="text-capitalize">'.$address_post.'</span>';
 							}				 
 						echo'</div>';
 					echo '</div>';
@@ -2528,7 +2618,7 @@ function bds_noibat($posts_per_page) {
 	    endwhile;
 	    //Reset Post Data
     echo "</div>";
-	echo '<div class="text-center"><a title="Bất động sản nổi bật" href="'.get_bloginfo('url').'/bat-dong-san-noi-bat" class="txt-more px-4 py-3 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
+	echo '<div class="text-center mt-md-4"><a title="Bất động sản nổi bật" href="'.get_bloginfo('url').'/bat-dong-san-noi-bat" class="txt-more px-4 py-3 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
     wp_reset_postdata();
   } 
 }
@@ -2928,7 +3018,7 @@ function thongdiep() {
 		$td_phone = trim($_POST['td_phone']);
 		$td_message = trim($_POST['td_message']);	
 
-		$address_company = 'SAV.7-01.03 The Sun Avenue 28 Mai Chí Thọ Quận 2';$phone_company = '0935112384';$mail_company = 'info.sansaland@gmail.com';
+		$address_company = '609 Hoàng Sa, Phường 7, Quận 3, Thành Phố Hồ Chí Minh';$phone_company = '0912469102';$mail_company = 'thelighthomevn@gmail.com';
 		if(get_option('address_company') !='') {
 			$address_company = get_option('address_company');
 		}
@@ -3352,7 +3442,7 @@ function share_social() { ?>
 function contactForm() {
 	 $success = '';  $errcaptacha = ''; 
 	if(isset($_POST['btn-send']) ) { 
-		$address_company = 'SAV.7-01.03 The Sun Avenue 28 Mai Chí Thọ Quận 2';$phone_company = '0935112384';$mail_company = 'info.sansaland@gmail.com';
+		$address_company = '609 Hoàng Sa, Phường 7, Quận 3, Thành Phố Hồ Chí Minh';$phone_company = '0912469102';$mail_company = 'thelighthomevn@gmail.com';
 		if(get_option('address_company') !='') {
 			$address_company = get_option('address_company');
 		}
@@ -3536,25 +3626,25 @@ function contactForm() {
 	} ?>
 	    <form action="" method="post" accept-charset="utf-8">                                
 	      <div class="row ">
-	          <div class="col-sm-6 my-2"><label>Họ và tên *</label><input type="text" name="your-name" class="form-control" required=""></div>
-	          <div class="col-sm-6 my-2"><label>Email *</label><input type="email" name="your-email" required="" class="form-control"></div>
+	          <div class="col-sm-6 my-2"><label class="mb-0">Họ và tên *</label><input type="text" name="your-name" class="form-control" required=""></div>
+	          <div class="col-sm-6 my-2"><label class="mb-0">Email *</label><input type="email" name="your-email" required="" class="form-control"></div>
 	      </div>
 	      <div class="row ">
-	          <div class="col-sm-6 my-2"><label>Số điện thoại </label><input type="tel" name="your-tel" class="form-control"></div>
-	          <div class="col-sm-6 my-2"><label>Địa chỉ </label><input type="text" name="diachi" class="form-control"></div>
+	          <div class="col-sm-6 my-2"><label class="mb-0">Số điện thoại </label><input type="tel" name="your-tel" class="form-control"></div>
+	          <div class="col-sm-6 my-2"><label class="mb-0">Địa chỉ </label><input type="text" name="diachi" class="form-control"></div>
 	      </div>
 	      <div class="row ">
-	          <div class="col-sm-12 my-2"><label>Nội dung </label><textarea name="your-message" cols="40" rows="5" class="form-control"></textarea></div>
+	          <div class="col-sm-12 my-2"><label class="mb-0">Nội dung </label><textarea name="your-message" cols="40" rows="4" class="form-control"></textarea></div>
 	      </div>
 	      <div class=" g-recaptcha-block row align-items-center">
-	      	<div class="col-12 col-sm-8 mb-4 my-2">
+	      	<div class="col-12 col-sm-8 my-2">
             	<div class="g-recaptcha" data-sitekey="6LfPR9EZAAAAAJ0e7Ypy2pR6NUV9td8ZW_xoa400"></div>
             </div>
             <div class="col-12 col-sm-4 text-center text-sm-right my-2">
             	<input type="submit" value="Gửi yêu cầu" class="btn btn-read-more text-capitalize px-5 px-sm-3 py-2 ml-sm-auto" name="btn-send">
             </div>
           </div>
-          <div class="form-group text-danger">
+          <div class="form-group text-danger mb-0">
             <?php
               echo $errcaptacha;
             ?>

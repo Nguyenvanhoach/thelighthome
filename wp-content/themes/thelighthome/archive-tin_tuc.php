@@ -13,6 +13,7 @@
 get_header(); 
 $terms = get_terms(array('taxonomy' => 'danh-muc-tin-tuc','hide_empty' => false,)); 
 ?>
+<div class="wrap-crumbs container my-3"><div id="crumbs" class="list-crumb text-capitalize"><a rel="nofollow" href="<?php echo get_bloginfo( 'url' ); ?>"><i class="fa fa-home mr-1"></i>Trang chủ</a> <i class="fa fa-angle-right mx-1" style="color: #646464;"></i> <span class="current">Tin tức</span></div></div>
 <div class="wrap-page py-4 py-md-5">
 	<div class="container">
 		<div class="row">

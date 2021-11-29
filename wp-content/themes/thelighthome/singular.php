@@ -11,24 +11,27 @@
 
 get_header();
 ?>
-
-<main id="site-content" role="main">
-
-	<?php
-
-	if ( have_posts() ) {
-
-		while ( have_posts() ) {
-			the_post();
-
-			get_template_part( 'template-parts/content', get_post_type() );
+<div class="wrap-crumbs container my-3"><?php if(function_exists('breadcrumb')){breadcrumb();} ?></div>
+<div class="container pb-4">
+	<div id="site-content" class="bg-gray border rounded p-3" role="main">
+	
+		<?php
+	
+		if ( have_posts() ) {
+	
+			while ( have_posts() ) {
+				the_post();
+	
+				get_template_part( 'template-parts/content', get_post_type() );
+			}
 		}
-	}
+	
+		?>
+	
+	</div><!-- #site-content -->
+	
+	<?php //get_template_part( 'template-parts/footer-menus-widgets' ); ?>
 
-	?>
-
-</main><!-- #site-content -->
-
-<?php get_template_part( 'template-parts/footer-menus-widgets' ); ?>
+</div>
 
 <?php get_footer(); ?>
