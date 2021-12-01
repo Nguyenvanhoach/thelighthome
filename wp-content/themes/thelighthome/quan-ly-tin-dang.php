@@ -83,7 +83,7 @@
 															</a>
 														</div>
 														<?php }?>
-														<div class="media-body text-left">
+														<div class="media-body text-left pl-2 text-capitalize">
 															<a style="color: red;" target="_blank" href="<?php the_permalink() ;?>"><?php echo $get_title->post_title; ?></a>
 														</div>
 														</div>

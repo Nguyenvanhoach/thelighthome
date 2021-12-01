@@ -1,16 +1,12 @@
 <?php 
 	/*Template Name: Edit Tin Template*/
-	get_header();	session_start();
-	$page_slug = get_post_field( 'post_name');
-	?>
-	
-	<?php
+	get_header();	session_start();$page_slug = get_post_field( 'post_name');
 	$post_ID = addslashes( $_GET['postid'] );
 	$post_tags = wp_get_post_tags($post_ID); 
 	$tagsarray = array();
 	$post_Status = get_post_status($post_ID);
 	foreach ($post_tags as $tag) {
-	    $tagsarray[] = $tag->name;
+	  $tagsarray[] = $tag->name;
 	}
 	$tagslist = implode( ', ', $tagsarray );
 	$curpost = get_post( $post_ID ); 
@@ -22,10 +18,10 @@
 	$huongbancong_post = get_post_meta( $post_ID, 'huongbancong_post', true );	
 	$sotang_post = get_post_meta( $post_ID, 'sotang_post', true );	
 	$donvi_price_post = get_post_meta( $post_ID, 'donvi_price_post', true );
-	$loaibds = get_post_meta( $post_ID, 'loaibds', true );
+	
 	$loai_bds = get_the_terms( $post_ID, 'loaibds' );
-	$loaibds = $loai_bds[0]->name;	
-
+	$loaibds = $loai_bds->name;	
+	
 	$feat_image = wp_get_attachment_url( get_post_thumbnail_id($post_ID) );	
 	$video_post = get_post_meta( $post_ID, 'video_post', true );
 	$bd_post = get_post_meta( $post_ID, 'bd_post', true );	
@@ -224,421 +220,312 @@
 											<strong>Thông tin về bất động sản <span class="color-red">*</span></strong>
 										</div>
 										<div class="col-sm-10">
-											<div class="row">
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Hình thức <span class="color-red">*</span></label>										
-															</div>	
-															<div class="col-sm-7">
-																<select name="hinhthuc_bds" class="form-control">
-														 			<?php 
-														 				$rt = true;
-														 				echo'<option value="">Lựa chọn</option>';
-																		foreach ($categoryPost as $itemCata) {	
-																			if($itemCata->category_parent == 0) {
-
-																				if($itemCata->name == get_category(64)->name || $itemCata->name == get_category(65)->name ) {echo 'if';
-																					echo '<option value="'.get_category(64)->name.'" '.selected($itemCata->name,get_category(64)->name).'>'.get_category(64)->name.'</option>';
-																					echo '<option value="'.get_category(65)->name.'" '.selected($itemCata->name,get_category(65)->name).'>'.get_category(65)->name.'</option>';	
-																					$rt=false;
-																				} else {
-																					if($rt) {echo 'else';
-																						echo'<option value="'.get_category(64)->name.'">'.get_category(64)->name.'</option>';
-																						echo'<option value="'.get_category(65)->name.'">'.get_category(65)->name.'</option>';
-																						$rt=false;
-																					}									
-																				}
-																			}
-																		} 
+											<div class="row align-items-sm-center">
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Hình thức <span class="color-red">*</span></label>										
+														</div>	
+														<div class="col-sm-7">
+															<select name="hinhthuc_bds" class="form-control">
+																<?php 
+																	
+																?>
+															</select>
+														</div>	
+													</div>											
+												</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>s</label>	
+														</div>	
+														<div class="col-sm-7">
+															<select name="hinhthuc_cat_sub" class="form-control">	
+																<?php
+																?>													 			
+															</select>
+														</div>	
+													</div>											
+												</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Loại bất động sản <span class="color-red">*</span></label>
+														</div>	
+														<div class="col-sm-7">
+															<select name="loai_bds" class="form-control">
+																<option value="">Lựa chọn</option>
+																<?php $terms = get_terms(array('taxonomy' => 'loaibds','hide_empty' => false,));
+																	foreach($terms as $term){ ?>
+																	<option value="<?php echo $term->name?>" <?php if($loaibds == $term->name){echo 'selected = "selected"' ;} ?>
+																		> <?php echo $term->name ?></option> 
+																	<?php }
 																	?>
-																</select>
-															</div>	
-														</div>
+															</select>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label><span id="cat-sub-name"><?php foreach($categoryPost as $cat){ if($cat->category_parent == 0) { echo $cat->name; } } ?></span><span class="color-red">*</span></label>	
-															</div>	
-															<div class="col-sm-7">
-																<select name="hinhthuc_cat_sub" class="form-control">	
-																	<?php
-																$cat_child_ID = '';
-																foreach($categoryPost as $cat) { 
-														 			if($cat->category_parent != 0) {
-																		$cat_child_ID = get_cat_ID($cat->name);
-																	}
-																}
-														 			foreach($categoryPost as $cat) { 
-														 				if($cat->category_parent == 0) {
-																		$hinhthuc_bds_ID = get_cat_ID($cat->name);
-																		$args = array('parent'         => $hinhthuc_bds_ID); 
-																		$terms = get_terms('category', $args);
-																		if (sizeof($terms)>0){
-																			foreach ( $terms as $term ) {		echo '<option value="'.$term->term_id.'" '.selected($term->term_id,$cat_child_ID).' >'.$term->name.'</option>';
-																			}
-																		}
-																	} }
-
-																	?>													 			
-																</select>
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Tỉnh thành phố <span class="color-red">*</span></label>													
+														</div>	
+														<div class="col-sm-7">
+															<select class="form-control" name="city_post">
+															</select>
+														</div>	
+													</div>
+												</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Quận huyện <span class="color-red">*</span></label>												
+														</div>	
+														<div class="col-sm-7">
+															<select class="form-control" name="quan_post">
+																			<?php ?>
+															</select>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Loại bất động sản <span class="color-red">*</span></label>
-															</div>	
-															<div class="col-sm-7">
-																<select name="loai_bds" class="form-control">
-																	<option value="">Lựa chọn</option>
-														 			<?php $terms = get_terms(array('taxonomy' => 'loaibds','hide_empty' => false,));
-																		foreach($terms as $term){ ?>
-																	 	<option value="<?php echo $term->name?>" <?php if($loaibds == $term->name){echo 'selected = "selected"' ;} ?>
-																	 		> <?php echo $term->name ?></option> 
-																		<?php }
-																    ?>
-																</select>
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Phường xã</label>						
+														</div>	
+														<div class="col-sm-7">
+															<select class="form-control" name="xa_post">
+																			<?php ?>
+															</select>
+														</div>	
+													</div>	
+												</div>	
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Đường phố</label>													
+														</div>	
+														<div class="col-sm-7">
+															<input type="text" class="form-control" name="duongpho_post" value="<?php echo get_post_meta( $post_ID, 'duongpho_post', true );?>" />
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Tỉnh thành phố <span class="color-red">*</span></label>													
-															</div>	
-															<div class="col-sm-7">
-																<select class="form-control" name="city_post">
-													           		<!-- <?php $tinh_thanhpho = get_thanhpho();
-													           		if(count($tinh_thanhpho) > 0):
-													               		foreach ($tinh_thanhpho as $k => $v) {
-													               			echo "<option ".selected( $city_post, $v['matp'] )."  value='".$v['matp']."'>".$v['name']."</option>";
-													               		}                
-													               	endif; ?> -->
-														 		</select>
-															</div>	
-														</div>
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Quận huyện <span class="color-red">*</span></label>												
-															</div>	
-															<div class="col-sm-7">
-																<select class="form-control" name="quan_post">
-													           		<?php $quanhuyen = get_address($city_post,'0');
-													           		if(count($quanhuyen) > 0):
-													               		foreach ($quanhuyen as $k => $v) {
-													               			echo "<option ".selected( $quan_post, $v['maqh'] )."  value='".$v['maqh']."'>".$v['qh']."</option>";
-													               		}
-													               	endif;?>
-														 		</select>
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Diện tích</label>													
+														</div>	
+														<div class="col-sm-7">														
+															<div class="input-group">														    
+																	<input value="<?php echo get_post_meta( $post_ID, 'dientich_post', true );?>" type="text" class="form-control" name="dientich_post" placeholder="100" />
+																	<span class="input-group-btn style-input-group-2">
+																			<button class="btn btn-default" type="button">m²</button>
+																	</span>
+															</div>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Phường xã</label>						
-															</div>	
-															<div class="col-sm-7">
-																<select class="form-control" name="xa_post">
-													           		<?php $xa = get_address($city_post,$quan_post,'0');
-													           		if(count($xa) > 0):
-													               		foreach ($xa as $k => $v) {
-													               			echo "<option ".selected( $xa_post, $v['xaid'] )."  value='".$v['xaid']."'>".$v['xa']."</option>";
-													               		}
-													               	endif;?>
-														 		</select>
-															</div>	
-														</div>
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Đường phố</label>													
-															</div>	
-															<div class="col-sm-7">
-																<input type="text" class="form-control" name="duongpho_post" value="<?php echo get_post_meta( $post_ID, 'duongpho_post', true );?>" />
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Giá <span class="color-red">*</span></label>												
+														</div>	
+														<div class="col-sm-7">
+															<input value="<?php echo get_post_meta( $post_ID, 'gia_post', true );?>"  type="text" placeholder="vdu: 1 tỷ: 1000000000" class="form-control" name="gia_post" />
+														</div>	
+													</div>												
+												</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Đơn vị giá</label>												
+														</div>	
+														<div class="col-sm-7">														
+															<select name="donvi_price_post" class="form-control">
+																<option value="0" <?php selected( $donvi_price_post, '0' ); ?>>Thỏa thuận</option>
+																<option value="1000000" <?php selected( $donvi_price_post, '1000000' ); ?>>Triệu</option>
+																<option value="1000000000" <?php selected( $donvi_price_post, '1000000000' ); ?>>Tỷ</option>
+															</select>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Dự án</label>	
-															</div>	
-															<div class="col-sm-7">		
-																<select class="form-control" name="duan_bds">
-														 			<option value="">Chọn Dự Án</option>
-														 			<?php 
-															 			$CataDuan = get_terms(array('category' => '','hide_empty' => false,));
-																	  	foreach($CataDuan as $duanitem){
-																	 		if ($duanitem->parent === 83) {
-																	 			echo"<option value='".$duanitem->name."' ".selected($selected_Child_Duan, $duanitem->name)." >".$duanitem->name."</option>";
-																	 		}				 			
-																		}
-																	 ?>
-														 		</select>
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Địa chỉ <span class="color-red">*</span></label>												
+														</div>	
+														<div class="col-sm-7">
+															<input type="text" class="form-control" name="address_post" value="<?php echo get_post_meta( $post_ID, 'address_post', true );?>" />
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Diện tích</label>													
-															</div>	
-															<div class="col-sm-7">														
-																<div class="input-group">														    
-																    <input value="<?php echo get_post_meta( $post_ID, 'dientich_post', true );?>" type="text" class="form-control" name="dientich_post" placeholder="100" />
-																    <span class="input-group-btn style-input-group-2">
-																        <button class="btn btn-default" type="button">m²</button>
-																    </span>
-																</div>
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Chọn số phòng tắm</label>												
+														</div>	
+														<div class="col-sm-7">
+															<select class="form-control" name="phongtam_post">
+																<option value="" selected="selected">Chọn số phòng tắm</option>
+																<option value="1" <?php selected( $phongtam_post, '1' ); ?>>1 Phòng</option>
+																<option value="2" <?php selected( $phongtam_post, '2' ); ?>>2 Phòng</option>
+																<option value="3" <?php selected( $phongtam_post, '3' ); ?>>3 Phòng</option>
+																<option value="4" <?php selected( $phongtam_post, '4' ); ?>>4 Phòng</option>
+																<option value="5" <?php selected( $phongtam_post, '5' ); ?>>5 Phòng</option>
+																<option value="6" <?php selected( $phongtam_post, '6' ); ?>>6 Phòng</option>
+															</select>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Giá <span class="color-red">*</span></label>												
-															</div>	
-															<div class="col-sm-7">
-																<input value="<?php echo get_post_meta( $post_ID, 'gia_post', true );?>"  type="text" placeholder="vdu: 1 tỷ: 1000000000" class="form-control" name="gia_post" />
-															</div>	
-														</div>												
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Chọn số phòng ngủ</label>												
+														</div>	
+														<div class="col-sm-7">
+															<select class="form-control" name="phongngu_post">
+																<option value="" selected="selected">Chọn số phòng ngủ</option>
+																<option value="1" <?php selected( $phongngu_post, '1' ); ?>>1 Phòng</option>
+																<option value="2" <?php selected( $phongngu_post, '2' ); ?>>2 Phòng</option>
+																<option value="3" <?php selected( $phongngu_post, '3' ); ?>>3 Phòng</option>
+																<option value="4" <?php selected( $phongngu_post, '4' ); ?>>4 Phòng</option>
+																<option value="5" <?php selected( $phongngu_post, '5' ); ?>>5 Phòng</option>
+																<option value="6" <?php selected( $phongngu_post, '6' ); ?>>6 Phòng</option>
+															</select>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Đơn vị giá</label>												
-															</div>	
-															<div class="col-sm-7">														
-																<select name="donvi_price_post" class="form-control">
-																	<option value="0" <?php selected( $donvi_price_post, '0' ); ?>>Thỏa thuận</option>
-																	<option value="1000000" <?php selected( $donvi_price_post, '1000000' ); ?>>Triệu</option>
-																	<option value="1000000000" <?php selected( $donvi_price_post, '1000000000' ); ?>>Tỷ</option>
-																</select>
-															</div>	
-														</div>
-														
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Số tầng</label>												
+														</div>	
+														<div class="col-sm-7">
+															<select class="form-control" name="sotang_post">
+																<option value="" selected="selected">Chọn số tầng</option>
+																<option value="1" <?php selected( $sotang_post, '1' ); ?>>1</option>
+																<option value="2" <?php selected( $sotang_post, '2' ); ?>>2</option>
+																<option value="3" <?php selected( $sotang_post, '3' ); ?>>3</option>
+																<option value="4" <?php selected( $sotang_post, '4' ); ?>>4</option>
+																<option value="5" <?php selected( $sotang_post, '5' ); ?>>5</option>
+																<option value="6" <?php selected( $sotang_post, '6' ); ?>>6</option>
+																<option value="7" <?php selected( $sotang_post, '7' ); ?>>7</option>
+																<option value="8" <?php selected( $sotang_post, '8' ); ?>>8</option>
+																<option value="9" <?php selected( $sotang_post, '9' ); ?>>9</option>
+																<option value="10" <?php selected( $sotang_post, '10' ); ?>>10</option>
+															</select>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Địa chỉ <span class="color-red">*</span></label>												
-															</div>	
-															<div class="col-sm-7">
-																<input type="text" class="form-control" name="address_post" value="<?php echo get_post_meta( $post_ID, 'address_post', true );?>" />
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Hướng nhà</label>												
+														</div>	
+														<div class="col-sm-7">
+															<select class="form-control" name="huongnha_post">
+																<option value="Không xác định" <?php selected( $huongnha_post, 'Không xác định' ); ?>>Không xác định</option>
+																<option value="Đông" <?php selected( $huongnha_post, 'Đông' ); ?>>Đông</option>
+																<option value="Tây" <?php selected( $huongnha_post, 'Tây' ); ?>>Tây</option>
+																<option value="Nam" <?php selected( $huongnha_post, 'Nam' ); ?>>Nam</option>
+																<option value="Bắc" <?php selected( $huongnha_post, 'Bắc' ); ?>>Bắc</option>
+																<option value="Đông-Bắc" <?php selected( $huongnha_post, 'Đông-Bắc' ); ?>>Đông-Bắc</option>
+																<option value="Tây-Bắc" <?php selected( $huongnha_post, 'Tây-Bắc' ); ?>>Tây-Bắc</option>
+																<option value="Tây-Nam" <?php selected( $huongnha_post, 'Tây-Nam' ); ?>>Tây-Nam</option>
+																<option value="Đông-Nam" <?php selected( $huongnha_post, 'Đông-Nam' ); ?>>Đông-Nam</option>
+															</select>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Chọn số phòng tắm</label>												
-															</div>	
-															<div class="col-sm-7">
-																<select class="form-control" name="phongtam_post">
-														 			<option value="" selected="selected">Chọn số phòng tắm</option>
-														 			<option value="1 Phòng" <?php selected( $phongtam_post, '1 Phòng' ); ?>>1 Phòng</option>
-														 			<option value="2 Phòng" <?php selected( $phongtam_post, '2 Phòng' ); ?>>2 Phòng</option>
-														 			<option value="3 Phòng" <?php selected( $phongtam_post, '3 Phòng' ); ?>>3 Phòng</option>
-														 			<option value="4 Phòng" <?php selected( $phongtam_post, '4 Phòng' ); ?>>4 Phòng</option>
-														 			<option value="5 Phòng" <?php selected( $phongtam_post, '5 Phòng' ); ?>>5 Phòng</option>
-														 			<option value="6 Phòng" <?php selected( $phongtam_post, '6 Phòng' ); ?>>6 Phòng</option>
-														 		</select>
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Hướng ban công</label>												
+														</div>	
+														<div class="col-sm-7">
+															<select class="form-control" name="huongbancong_post">
+																<option value="Không xác định" <?php selected( $huongbancong_post, 'Không xác định' ); ?>>Không xác định</option>
+																<option value="Đông" <?php selected( $huongbancong_post, 'Đông' ); ?>>Đông</option>
+																<option value="Tây" <?php selected( $huongbancong_post, 'Tây' ); ?>>Tây</option>
+																<option value="Nam" <?php selected( $huongbancong_post, 'Nam' ); ?>>Nam</option>
+																<option value="Bắc" <?php selected( $huongbancong_post, 'Bắc' ); ?>>Bắc</option>
+																<option value="Đông-Bắc" <?php selected( $huongbancong_post, 'Đông-Bắc' ); ?>>Đông-Bắc</option>
+																<option value="Tây-Bắc" <?php selected( $huongbancong_post, 'Tây-Bắc' ); ?>>Tây-Bắc</option>
+																<option value="Tây-Nam" <?php selected( $huongbancong_post, 'Tây-Nam' ); ?>>Tây-Nam</option>
+																<option value="Đông-Nam" <?php selected( $huongbancong_post, 'Đông-Nam' ); ?>>Đông-Nam</option>
+															</select>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Chọn số phòng ngủ</label>												
-															</div>	
-															<div class="col-sm-7">
-																<select class="form-control" name="phongngu_post">
-														 			<option value="" selected="selected">Chọn số phòng ngủ</option>
-														 			<option value="1 Phòng" <?php selected( $phongngu_post, '1 Phòng' ); ?>>1 Phòng</option>
-														 			<option value="2 Phòng" <?php selected( $phongngu_post, '2 Phòng' ); ?>>2 Phòng</option>
-														 			<option value="3 Phòng" <?php selected( $phongngu_post, '3 Phòng' ); ?>>3 Phòng</option>
-														 			<option value="4 Phòng" <?php selected( $phongngu_post, '4 Phòng' ); ?>>4 Phòng</option>
-														 			<option value="5 Phòng" <?php selected( $phongngu_post, '5 Phòng' ); ?>>5 Phòng</option>
-														 			<option value="6 Phòng" <?php selected( $phongngu_post, '6 Phòng' ); ?>>6 Phòng</option>
-														 		</select>
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Đường vào (m)</label>												
+														</div>	
+														<div class="col-sm-7">
+															<input type="text" class="form-control" name="duongvao_post" value="<?php echo get_post_meta( $post_ID, 'duongvao_post', true );?>" />
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Số tầng</label>												
-															</div>	
-															<div class="col-sm-7">
-																<select class="form-control" name="sotang_post">
-														 			<option value="" selected="selected">Chọn số tầng</option>
-														 			<option value="1" <?php selected( $sotang_post, '1' ); ?>>1</option>
-														 			<option value="2" <?php selected( $sotang_post, '2' ); ?>>2</option>
-														 			<option value="3" <?php selected( $sotang_post, '3' ); ?>>3</option>
-														 			<option value="4" <?php selected( $sotang_post, '4' ); ?>>4</option>
-														 			<option value="5" <?php selected( $sotang_post, '5' ); ?>>5</option>
-														 			<option value="6" <?php selected( $sotang_post, '6' ); ?>>6</option>
-														 			<option value="7" <?php selected( $sotang_post, '7' ); ?>>7</option>
-														 			<option value="8" <?php selected( $sotang_post, '8' ); ?>>8</option>
-														 			<option value="9" <?php selected( $sotang_post, '9' ); ?>>9</option>
-														 			<option value="10" <?php selected( $sotang_post, '10' ); ?>>10</option>
-														 		</select>
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Mặt tiền (m)</label>												
+														</div>	
+														<div class="col-sm-7">
+															<input type="text" class="form-control" name="mattien_post" value="<?php echo get_post_meta( $post_ID, 'mattien_post', true );?>" />
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Hướng nhà</label>												
-															</div>	
-															<div class="col-sm-7">
-																<select class="form-control" name="huongnha_post">
-														 			<option value="Không xác định" <?php selected( $huongnha_post, 'Không xác định' ); ?>>Không xác định</option>
-														 			<option value="Đông" <?php selected( $huongnha_post, 'Đông' ); ?>>Đông</option>
-														 			<option value="Tây" <?php selected( $huongnha_post, 'Tây' ); ?>>Tây</option>
-														 			<option value="Nam" <?php selected( $huongnha_post, 'Nam' ); ?>>Nam</option>
-														 			<option value="Bắc" <?php selected( $huongnha_post, 'Bắc' ); ?>>Bắc</option>
-														 			<option value="Đông-Bắc" <?php selected( $huongnha_post, 'Đông-Bắc' ); ?>>Đông-Bắc</option>
-														 			<option value="Tây-Bắc" <?php selected( $huongnha_post, 'Tây-Bắc' ); ?>>Tây-Bắc</option>
-														 			<option value="Tây-Nam" <?php selected( $huongnha_post, 'Tây-Nam' ); ?>>Tây-Nam</option>
-														 			<option value="Đông-Nam" <?php selected( $huongnha_post, 'Đông-Nam' ); ?>>Đông-Nam</option>
-														 		</select>
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Nội thất</label>												
+														</div>	
+														<div class="col-sm-7">
+															<textarea name="noithat_post"  rows="3" cols="5" class="form-control"><?php echo get_post_meta( $post_ID, 'noithat_post', true );?></textarea>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Hướng ban công</label>												
-															</div>	
-															<div class="col-sm-7">
-																<select class="form-control" name="huongbancong_post">
-														 			<option value="Không xác định" <?php selected( $huongbancong_post, 'Không xác định' ); ?>>Không xác định</option>
-														 			<option value="Đông" <?php selected( $huongbancong_post, 'Đông' ); ?>>Đông</option>
-														 			<option value="Tây" <?php selected( $huongbancong_post, 'Tây' ); ?>>Tây</option>
-														 			<option value="Nam" <?php selected( $huongbancong_post, 'Nam' ); ?>>Nam</option>
-														 			<option value="Bắc" <?php selected( $huongbancong_post, 'Bắc' ); ?>>Bắc</option>
-														 			<option value="Đông-Bắc" <?php selected( $huongbancong_post, 'Đông-Bắc' ); ?>>Đông-Bắc</option>
-														 			<option value="Tây-Bắc" <?php selected( $huongbancong_post, 'Tây-Bắc' ); ?>>Tây-Bắc</option>
-														 			<option value="Tây-Nam" <?php selected( $huongbancong_post, 'Tây-Nam' ); ?>>Tây-Nam</option>
-														 			<option value="Đông-Nam" <?php selected( $huongbancong_post, 'Đông-Nam' ); ?>>Đông-Nam</option>
-														 		</select>
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Tiện ích kèm theo</label>												
+														</div>	
+														<div class="col-sm-7">
+															<textarea name="tienichkemtheo_post"  rows="3" cols="5" class="form-control"><?php echo get_post_meta( $post_ID, 'tienichkemtheo_post', true );?></textarea>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Đường vào (m)</label>												
-															</div>	
-															<div class="col-sm-7">
-																<input type="text" class="form-control" name="duongvao_post" value="<?php echo get_post_meta( $post_ID, 'duongvao_post', true );?>" />
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Đặc điểm xã hội</label>												
+														</div>	
+														<div class="col-sm-7">
+															<textarea name="dacdiemxahoi_post"  rows="3" cols="5" class="form-control"><?php echo get_post_meta( $post_ID, 'dacdiemxahoi_post', true );?></textarea>
+														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Mặt tiền (m)</label>												
-															</div>	
-															<div class="col-sm-7">
-																<input type="text" class="form-control" name="mattien_post" value="<?php echo get_post_meta( $post_ID, 'mattien_post', true );?>" />
-															</div>	
-														</div>
-													</div>											
-												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Nội thất</label>												
-															</div>	
-															<div class="col-sm-7">
-																<textarea name="noithat_post"  rows="3" cols="5" class="form-control"><?php echo get_post_meta( $post_ID, 'noithat_post', true );?></textarea>
-															</div>	
-														</div>
-													</div>											
-												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Tiện ích kèm theo</label>												
-															</div>	
-															<div class="col-sm-7">
-																<textarea name="tienichkemtheo_post"  rows="3" cols="5" class="form-control"><?php echo get_post_meta( $post_ID, 'tienichkemtheo_post', true );?></textarea>
-															</div>	
-														</div>
-													</div>											
-												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Đặc điểm xã hội</label>												
-															</div>	
-															<div class="col-sm-7">
-																<textarea name="dacdiemxahoi_post"  rows="3" cols="5" class="form-control"><?php echo get_post_meta( $post_ID, 'dacdiemxahoi_post', true );?></textarea>
-															</div>	
-														</div>
-													</div>											
-												</div>
-												<div class="col-sm-6">
-													<div class="row ">
-														<div class="form-group center-flex">
-															<div class="col-sm-5">
-																<label>Pháp lý</label>												
-															</div>	
-															<div class="col-sm-7">
-																<textarea name="phaply_post"  rows="3" cols="5" class="form-control"><?php echo get_post_meta( $post_ID, 'phaply_post', true );?></textarea>
-															</div>	
-														</div>
+												<div class="col-sm-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+															<label>Pháp lý</label>												
+														</div>	
+														<div class="col-sm-7">
+															<textarea name="phaply_post"  rows="3" cols="5" class="form-control"><?php echo get_post_meta( $post_ID, 'phaply_post', true );?></textarea>
+														</div>	
 													</div>											
 												</div>
 											</div>
 										</div>
 									</div>								
 									<div class="row row-list">
-										<div class="col-sm-2 color-primary">
+										<div class="col-12 color-primary mb-1">
 											<strong>Thông tin mô tả <span class="color-red">*</span></strong>
 										</div>
-										<div class="col-sm-10">
+										<div class="col-12">
 											<div class="form-horizontal">
 												<?php $post = get_post( $post_ID, OBJECT, 'edit' );$content = $post->post_content;wp_editor( $content, 'userpostcontent', array( 'textarea_name' => 'post_content' ));?>
 											</div>
@@ -648,7 +535,7 @@
 										<div class="col-sm-2 color-primary">
 											<strong>Hình ảnh đại diện bài viết </strong>
 										</div>
-										<div class="col-xs-12 col-md-10">
+										<div class="col-12 col-md-10">
 											<div class="form-horizontal form-group img-upload">									
 									        	<div class="wrap-upload">
 									        		<p>(Click để tải ảnh)</p>
@@ -660,7 +547,7 @@
 										</div>								
 									</div>
 									<div class="row row-list" id="gallery-metabox">
-										<div class="col-xs-12 col-md-2 color-primary">
+										<div class="col-12 col-md-2 color-primary">
 											<strong>Slider hình ảnh</strong>
 										</div>
 										<div class="col-md-10">
@@ -683,21 +570,21 @@
 										</div>						
 									</div>
 									<div class="row row-list">
-										<div class="col-xs-12 col-md-2 color-primary">
+										<div class="col-12 col-md-2 color-primary">
 											<strong>Link Video</strong>
 										</div>
-										<div class="col-xs-12 col-md-10">
+										<div class="col-12 col-md-10">
 											<div class="form-horizontal">
-												<input type="text" class="form-control" name="video_post" placeholder="Dán link video Youtube vào đây." />
+												<input type="text" class="form-control" name="video_post" value="<?php echo get_post_meta( $post_ID, 'video_post', true ); ?>" placeholder="Dán link video Youtube vào đây." />
 											</div>
 										</div>
 									</div>
 									<div class="row row-list">
-										<div class="col-xs-12 col-md-2 color-primary">
+										<div class="col-12 col-md-2 color-primary">
 											<strong>Địa Chỉ bản đồ</strong>
 										</div>
-										<div class="col-xs-12 col-md-10">
-											<input type="text" name="bd_post" class="form-control" placeholder="ví dụ: 35 Nguyễn Huệ, Phường bến nghé, quận 1, TP.Hồ chí minh">
+										<div class="col-12 col-md-10">
+											<input type="text" name="bd_post" class="form-control" value="<?php echo get_post_meta( $post_ID, 'bd_post', true ); ?>" placeholder="ví dụ: 35 Nguyễn Huệ, Phường bến nghé, quận 1, TP.Hồ chí minh">
 											<p><i>Để tăng độ tin cậy và tin rao được nhiều người quan tâm</i></p>
 										</div>
 									</div>
@@ -738,53 +625,18 @@
 										</div>
 									</div>
 									<div class="row row-list">
-										<div class="col-sm-2 color-primary">
-											<strong>Lịch đăng tin</strong>
-										</div>
-										<div class="col-sm-10">
-											<div class="row">
-												<div class="col-sm-4">
-													<label>Loại tin</label>
-													<select name="loaitinrao_post" class="form-control select-loai-tin">
-														<?php echo '<option value="'.$loaitinrao_post.'">'.$loaitinrao_post.'</option>'; ?>			
-													</select>
-												</div>
-												<div class="col-sm-4">
-													<label>Ngày bắt đầu</label>
-													<div class="input-group date" id="date_start">
-									                    <input disabled="true" type="text" name="datestart_post" class="form-control" value="<?php echo $datestart_post; ?>">
-									                    <span class="input-group-addon">
-									                        <i class="fa fa-calendar" aria-hidden="true"></i>
-									                    </span>
-									                </div>
-												</div>
-												<div class="col-sm-4">
-													<label>Ngày kết thúc</label>
-													<div class="input-group date" id="date_end">
-									                    <input disabled="true" type="text" name="dateend_post" value="<?php echo $dateend_post; ?>" class="form-control">
-									                    <span class="input-group-addon">
-									                        <i class="fa fa-calendar" aria-hidden="true"></i>
-									                    </span>
-									                </div>
-												</div>
-												
+										<div class="col-12">									
+											<div class="wrap-btn d-flex justify-content-center">
+												<input type="hidden" name="edit_post" value="post" />
+													<?php wp_nonce_field( 'post_nonce', 'post_nonce_field' ); ?>
+												<input type="hidden" name="add_new_post" value="post" />
+												<?php wp_nonce_field( 'post_nonce', 'post_nonce_field' ); ?>
+												<button class="btn btn-secondary mx-1 px-4" name="reset" type="reset" onclick="history.back();">Hủy Bỏ</button>
+												<button class="btn btn-primary mx-1 px-4" type="submit">Sửa Tin</button>
 											</div>
 										</div>
-									</div>	
-									<div class="row row-list">
-							            <div class="col-sm-12">									
-							            	<div class="wrap-btn form-group">
-							            		<input type="hidden" name="edit_post" value="post" />
-		                						<?php wp_nonce_field( 'post_nonce', 'post_nonce_field' ); ?>
-							            		<input type="hidden" name="add_new_post" value="post" />
-										        <?php wp_nonce_field( 'post_nonce', 'post_nonce_field' ); ?>
-							                    <button class="btn btn-reset" name="reset" type="reset" onclick="history.back();">Hủy Bỏ</button>
-							                    <button class="btn btn-primary" type="submit">Sửa Tin</button>
-							                </div>
-								        </div>
-								    </div>
+								  </div>
 								</form>
-
 							</div>
 						</div>
 						<div class="col-md-3">

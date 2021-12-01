@@ -2,7 +2,7 @@
 	/*Template Name: Đăng Tin Template*/
 	get_header();
 	session_start();	
-	$page_slug = get_post_field( 'post_name');
+	$page_slug = get_post_field( 'post_name');	
 	?>
 	<main class="main py-4 py-md-5">
 		<div class="wrap-content">
@@ -406,6 +406,8 @@
 								}
 								$dientich_post = sanitize_text_field( $_POST['dientich_post'] );	
 								$area = sanitize_text_field( $_POST['area'] );	
+								$area = get_term_by('slug', $area, 'area');
+								$area = $area->term_id;
 								$address_post = sanitize_text_field( $_POST['address_post'] );
 								$gia_post = sanitize_text_field( $_POST['gia_post'] );	
 								$donvi_price_post = sanitize_text_field( $_POST['donvi_price_post'] );
@@ -427,7 +429,13 @@
 								$phone_post = sanitize_text_field($_POST['phone_post']);
 								$user_email_post = sanitize_text_field($_POST['user_email_post']);
 								$danhmuc = sanitize_text_field($_POST['danhmuc']);
+								$id_dmuc = get_category_by_slug($danhmuc); 
+								$id_dmuc = $id_dmuc->term_id;
+								
 								$loaibds = sanitize_text_field($_POST['loaibds']);
+								$loaibds = get_term_by('slug', $loaibds, 'loaibds');
+								$loaibds = $loaibds->term_id;
+
 								$quan_huyen = sanitize_text_field($_POST['quan_huyen']);
 								$phuong_xa = sanitize_text_field($_POST['phuong_xa']);
 								
@@ -437,7 +445,7 @@
 									$post = array(
 										'post_title'    => wp_strip_all_tags($post_title),
 										'post_content'  => $post_content,
-										'post_category' => array(1,$danhmuc),
+										'post_category' => array(1,$id_dmuc),
 										'tags_input'    => $post_tags,
 										'post_status'   => $status_post,
 										'post_type' => 'post',
@@ -453,10 +461,7 @@
 										upload_imgs_gallerry($files_gallery, $bdsttp_post_id);
 									}
 								
-									wp_set_object_terms($bdsttp_post_id, $loaibds, 'loaibds', true);
-									wp_set_object_terms($bdsttp_post_id, $area, 'area', true);		
-									update_post_meta($bdsttp_post_id,'bd_post',$bd_post);
-									
+									update_post_meta($bdsttp_post_id,'bd_post',$bd_post);									
 									update_post_meta( $bdsttp_post_id, 'dientich_post', $dientich_post);
 									update_post_meta( $bdsttp_post_id, 'address_post', $address_post);
 									update_post_meta( $bdsttp_post_id, 'gia_post', $gia_post);
@@ -479,7 +484,6 @@
 									update_post_meta( $bdsttp_post_id, 'phone_post', $phone_post);
 									update_post_meta( $bdsttp_post_id, 'user_email_post', $user_email_post);
 
-									// wp_set_object_terms($bdsttp_post_id, $quan_huyen, 'khuvucbds', true);
 									update_post_meta($bdsttp_post_id,'_thumbnail_id',$attachment_id);	
 									
 									echo '<div class="alert alert-success text-center"><strong>Chúc mừng bạn. Bài viết của bạn sẽ được hệ thống chúng tôi xem xét và cập nhật lên Website.</strong></div>';
