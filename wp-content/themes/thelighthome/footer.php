@@ -1,11 +1,11 @@
 </main>
-<footer class="footer pt-5">
+<footer class="footer pt-4 pt-md-5">
   <div class="inner-footer">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-6 text-center text-md-left mb-4 mb-md-0">
-          <img loading="lazy" src="<?php echo get_template_directory_uri();?>/assets/images/logo.png" class="img-fluid d-block d-md-inline-block mb-3 mx-auto" alt="<?php bloginfo('description'); ?>">
-          <p class="mw1">Phòng Đẹp Dịch Vụ Thông Minh Chuyên cung cấp phòng cho thuê tại Thành phố Hồ Chí Minh</p>
+          <img loading="lazy" src="<?php echo get_template_directory_uri();?>/assets/images/logo.png" class="img-fluid d-block d-md-inline-block mb-3 mx-auto logo-f" alt="<?php bloginfo('description'); ?>">
+          <p class="mw1 mb-0">Phòng Đẹp Dịch Vụ Thông Minh Chuyên cung cấp phòng cho thuê tại Thành phố Hồ Chí Minh</p>
         </div>
         <div class="col-md-6 text-left text-md-right d-flex justify-content-md-end">        
           <div class="wrap-fb overflow-hidden">
@@ -15,9 +15,9 @@
       </div>
       <div class="line my-3 my-md-4"></div>
       <div class="row mb-2">
-        <div class="col-12 col-md-3 mb-4 mb-md-0">
+        <div class="col-12 col-md-3 mb-3 mb-md-0">
           <h3 class="text-uppercase"><span class="pb-2">Thông tin liên hệ</span></h3>       
-          <ul class="address list-unstyled mb-4">
+          <ul class="address list-unstyled mb-0 mb-md-4">
             <?php if(get_option('address_company') !='') {echo'<li class="address-icon">'.get_option('address_company').'</li>';}?>
             <?php if(get_option('phone_company') !='') {echo'<li class="hotline-icon">'.get_option('phone_company').'</li>';}?>
             <?php if(get_option('fax_company') !='') {echo'<li class="fax-icon">'.get_option('fax_company').'</li>';}?>
@@ -62,13 +62,76 @@
     </div>      
   </div>
 </footer>
+<div class="icon-right d-flex flex-row flex-md-column justify-content-between px-3 px-md-0">   
+  <?php if(get_option('hotline') !='') {echo'<div class="text-center"><a title="Gọi ngay 24/7" href="tel:'.get_option('hotline').'" class="icon icon-phone support"><span>Gọi ĐT tư vấn ngay</span><i class="fas fa-headphones-alt d-flex align-items-center justify-content-center d-md-none h-100"></i>    </a>
+    <div class="txt-act-ftor d-md-none">Gọi ngay</div></div>';}?>  
+  <?php if(get_option('facebook') !='') { $shopfb =  str_replace( 'https://www.facebook.com/', '', get_option('facebook') ); echo '<div class="text-center"><a target="_blank" href="https://www.messenger.com/t/'.$shopfb.'" title="Chat ngay qua Messenger" class="icon icon-messenger"><span>Chat ngay qua Messenger</span></a><div class="d-md-none txt-act-ftor">Messenger</div></div>'; } ?>	
+  <?php if(get_option('zalo') !='') { echo '<div class="text-center"><a target="_blank" href="'.get_option('zalo').'" title="Chat ngay qua Zalo" class="icon icon-zalo"><span>Chat ngay qua Zalo</span></a><div class="d-md-none txt-act-ftor">Zalo</div></div>'; } ?>		
+</div>
 <a id="totop" class="totop d-flex align-items-center justify-content-center" href="#" title="To top"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
 <?php wp_footer(); ?>
 
 <script src="<?php echo get_template_directory_uri();?>/assets/js/script.js"></script>	
 
-<script src='https://www.google.com/recaptcha/api.js' async defer></script>
-  
+<script src='https://www.google.com/recaptcha/api.js' async defer></script> <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+<script>
+  $(document).ready(function() {
+    $wrapRangSlide = $('.wrap-rang-slide');
+    if($wrapRangSlide.length) {     
+      $price_min = $('.price-min').val();
+      $price_max = $('.price-max').val();      
+      $( "#slider-range" ).slider({
+        range: true,
+        min: parseInt($price_min),
+        max: parseInt($price_max),
+        values: [ parseInt($price_min), parseInt($price_max) ],
+        slide: function( event, ui ) {
+          // $( "#amount-to").val(ui.values[ 0 ]);
+          // $( "#amount-right").val(ui.values[ 1 ]);
+          //$( "#amount-to").html($( "#slider-range" ).slider("values", 0 ));
+          var price_min = ui.values[0];
+          $.ajax({
+            url : '<?php echo admin_url( "admin-ajax.php" ); ?>',
+            type : 'POST',
+            dataType:"html",
+            data : {'action' : 'priceMin_action','price_min':price_min},
+            success : function (result){
+              $("#amount-to").html(result);
+            }
+          });
+          var price_max = ui.values[1];
+          $.ajax({
+            url : '<?php echo admin_url( "admin-ajax.php" ); ?>',
+            type : 'POST',
+            dataType:"html",
+            data : {'action' : 'priceMax_action','price_max':price_max},
+            success : function (result){
+              $("#amount-right").html(result);
+            }
+          });
+
+          // $('.mo-left').html(ui.values[0].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ' VNĐ');
+          //   $('.mo-right').html(ui.values[1].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ' VNĐ');
+          $('.price-min').val(ui.values[0]);
+          $('.price-max').val(ui.values[1]);
+        }
+      });
+        $( "#amount-to").html($( "#slider-range" ).slider("values", 0 ) + ' đồng');
+        var price_max = $( "#slider-range" ).slider("values", 1 );
+        $.ajax({
+          url : '<?php echo admin_url( "admin-ajax.php" ); ?>',
+          type : 'POST',
+          dataType:"html",
+          data : {'action' : 'priceMax_action','price_max':price_max},
+          success : function (result){
+            $("#amount-right").html(result);
+          }
+        });
+      $('.price-min').val($( "#slider-range" ).slider("values", 0 ));
+      $('.price-max').val($( "#slider-range" ).slider("values", 1 ));
+    }
+  } );
+  </script> 
 </body>
 </html>
 

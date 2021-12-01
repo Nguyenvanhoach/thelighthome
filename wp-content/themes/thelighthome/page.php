@@ -16,12 +16,12 @@
  */
 
 get_header(); ?>
-
-<div class="wrap-page py-5">
+<div class="wrap-crumbs container my-3 my-md-4"><?php if(function_exists('breadcrumb')){breadcrumb();} ?></div>
+<div class="wrap-page pb-4 pb-md-5">
 	<?php
 	while ( have_posts() ) : the_post();
 
-		get_template_part( 'template-parts/page/content', 'page' );
+		get_template_part( 'template-parts/page/content-page', 'page' );
 
 		// If comments are open or we have at least one comment, load up the comment template.
 		// if ( comments_open() || get_comments_number() ) :

@@ -4,7 +4,7 @@
 	global $wpdb; 
 ?>
 <main class="main">
-	<div class="wrap-crumbs container my-3"><?php if(function_exists('breadcrumb')){breadcrumb();} ?></div>
+	<div class="wrap-crumbs container my-3 my-md-4"><?php if(function_exists('breadcrumb')){breadcrumb();} ?></div>
 	<div class="contact-form py-4">
 		<div class="container">
 		    <div class="row">

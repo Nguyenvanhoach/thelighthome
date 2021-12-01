@@ -26,11 +26,8 @@ get_header();
   </div>      
   <?php } ?>
   <div class="banner-content d-flex align-items-center">
-    <div class="container">
-      <div class="search-block">
-        <h3 class="text-capitalize mb-4 d-flex flex-wrap align-items-center justify-content-center"><div class="d-inline-block mr-2 icon-search"><img loading="lazy" src="<?php echo get_template_directory_uri();?>/assets/images/icon-search-home.png" class="img-fluid d-inline-block" alt="<?php echo get_bloginfo( 'name' ); ?>"></div>Tìm kiếm Bất Động Sản</h3>  
-        <div class="row justify-content-center"><div class="col-md-10 col-lg-8"><?php searchBox(); ?></div></div>
-      </div>    
+    <div class="container">     
+      <div class="row justify-content-center"><div class="col-md-10 col-lg-8"><?php searchBox(); ?></div></div>
     </div>
   </div>
 </div>
@@ -67,8 +64,8 @@ get_header();
 </div>
 <div class="container py-4 py-md-5">
   <div class="row">
-    <div class="col-md-7 col-lg-8">
-      <ul class="nav nav-tabs tabs-bds" id="tabs-bds" role="tablist">
+    <div class="col-md-7 col-lg-8 mb-4 mb-md-0">
+      <ul class="nav nav-tabs tabs-bds d-flex flex-nowrap" id="tabs-bds" role="tablist">
         <li class="nav-item">
           <a class="nav-link text-uppercase active" id="tab-bds-news" data-toggle="tab" href="#bds-news" role="tab" aria-controls="bds-news" aria-selected="true">Mới nhất</a>
         </li>
@@ -89,7 +86,7 @@ get_header();
               $post = array(
                 'post_status'   => 'publish',
                 'post_type' => 'post', 
-                'posts_per_page' => 9,   
+                'posts_per_page' => 5,   
                 'tax_query' => array(
                   array(
                       'taxonomy' => 'category',
@@ -109,13 +106,17 @@ get_header();
                   $phongngu_post = get_post_meta(get_the_id(),'phongngu_post',true);
                   $gia_post = get_post_meta($postid, 'gia_post', true );
                   $address_post = get_post_meta($postid, 'address_post', true );
+                  $donvi_price_post = get_post_meta( $postid, 'donvi_price_post', true );
+                  if($donvi_price_post) {
+                    $donvi_price_post = '/'.$donvi_price_post;
+                  }	 
                   echo '<div class="col-12 item-real box-real boxshadow-none my-4 px-4 py-2"><div class="row">';
                     echo '<div class="col-4 col-lg-3 px-0">';
                       echo '<a class="post-media h-100 d-block" href="'.get_the_permalink().'" title="'.get_the_title().'">';
                         if(get_post_thumbnail_id($postid)) {
                           echo '<div class="img-wrap">'.get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid d-block mx-auto','alt' => get_the_title(),'loading' => 'lazy')).'</div>';
                         } else {
-                          echo"<div class='bg-img img-wrap'><img src='".get_template_directory_uri()."/assets/images/logo.png' alt='".get_bloginfo( 'name' )."' class='img-fluid d-block mx-auto'></div>";
+                          echo"<div class='bg-img img-wrap'><img src='".get_template_directory_uri()."/assets/images/logo.png' alt='".get_bloginfo( 'name' )."' class='img-fluid d-block mx-auto' loading = 'lazy'></div>";
                         }
                       echo '</a>';
                     echo '</div>';                        
@@ -123,7 +124,7 @@ get_header();
                         echo '<div class="h-100"><a class="d-block" href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize my-1">'. get_the_title() .'</h4></a>';   
                         echo '<div class="block-att">';
                           if($gia_post) {
-                            echo '<div class="my-1"><i class="fa fa-usd"></i> Giá: <span class="listing-price">'.$gia_post.'</span></div>';
+                            echo '<div class="my-1"><i class="fa fa-usd"></i> Giá: <span class="listing-price">'.price($gia_post).'</span><span class="text-lowercase">'.$donvi_price_post.'</span></div>';
                           }
                           echo '<div class="listing-info d-flex flex-wrap align-items-center">';
                           if($phongngu_post) {
@@ -146,6 +147,7 @@ get_header();
                   echo "</div></div>";
                 endwhile;
                 wp_reset_postdata();
+                echo '<div class="text-center mt-md-4"><a title="Bất động sản nổi bật" href="'.get_bloginfo('url').'/cho-thue/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
               } 
             ?>
           </div>
@@ -156,7 +158,7 @@ get_header();
               $post = array(
                 'post_status'   => 'publish',
                 'post_type' => 'post', 
-                'posts_per_page' => 9,   
+                'posts_per_page' => 5,   
                 'tax_query' => array(
                   array(
                       'taxonomy' => 'category',
@@ -213,6 +215,7 @@ get_header();
                   echo "</div></div>";
                 endwhile;
                 wp_reset_postdata();
+                echo '<div class="text-center mt-md-4"><a title="Phòng trọ" href="'.get_bloginfo('url').'/cho-thue/phong-tro/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
               } 
             ?>
           </div>
@@ -223,7 +226,7 @@ get_header();
               $post = array(
                 'post_status'   => 'publish',
                 'post_type' => 'post', 
-                'posts_per_page' => 9,   
+                'posts_per_page' => 5,   
                 'tax_query' => array(
                   array(
                       'taxonomy' => 'category',
@@ -279,6 +282,7 @@ get_header();
                   echo "</div></div>";
                 endwhile;
                 wp_reset_postdata();
+                echo '<div class="text-center mt-md-4"><a title="Căn hộ chung cư" href="'.get_bloginfo('url').'/cho-thue/can-ho-chung-cu/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
               } 
             ?>
           </div>
@@ -289,7 +293,7 @@ get_header();
               $post = array(
                 'post_status'   => 'publish',
                 'post_type' => 'post', 
-                'posts_per_page' => 9,   
+                'posts_per_page' => 5,   
                 'tax_query' => array(
                   array(
                       'taxonomy' => 'category',
@@ -346,6 +350,7 @@ get_header();
                   echo "</div></div>";
                 endwhile;
                 wp_reset_postdata();
+                echo '<div class="text-center mt-md-4"><a title="Văn Phòng" href="'.get_bloginfo('url').'/cho-thue/van-phong/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
               } 
             ?>
           </div>
@@ -366,7 +371,7 @@ get_header();
 </div>
 
 
-<div class="khuvuc py-5 bg-gray">
+<div class="khuvuc py-4 py-md-5 bg-gray">
   <div class="container">
     <h3 class="title-block d-flex flex-wrap align-items-center text-uppercase"><strong>Bất động sản theo địa điểm</strong></h3>
     <div class="row space-m">
@@ -374,43 +379,44 @@ get_header();
         $terms = get_terms(array('taxonomy' => 'khuvucbds','hide_empty' => false,'orderby' => 'id','order' => 'ASC','parent'   => 0));   
         $stt = 1;
         $loop1 = '';
-        $loop2 = '<div class="col-12 col-md-6"><div class="row">';
+        $loop2 = '<div class="col-12 col-md-6"><div class="row space-m">';
         $loop3 = '';
         foreach($terms as $term){
+          
           $image_id = get_term_meta ( $term -> term_id, 'category-image-id', true );
           $img_url = wp_get_attachment_image_src($image_id, 'full')[0];
           if($stt == 1) {
-            $loop1 .= '<div class="col-12 col-md-6 my-3">
+            $loop1 .= '<div class="col-12 col-md-6 my-2 my-md-3">
             <a href="'.get_term_link($term->slug, 'khuvucbds').'" title="'.$term->name.'" class="d-block position-relative rounded overflow-hidden h-100">
               <div class="img-wrap h-100"><img src="'.$img_url.'" class="img-fluid d-block mx-auto wp-post-image" alt="'.$term->name.'" loading="lazy"></div>
               <div class="content position-absolute text-white d-flex align-items-center justify-content-center text-center">
                 <div>
                   <h5 class="font-weight-bold text-capitalize">'.$term->name.'</h5>
-                  <div>0 Bất động sản tại '.$term->name.'</div>
+                  <div><strong>'.$term->count.'</strong> Bất động sản tại '.$term->name.'</div>
                 </div>
               </div>
             </a>
           </div>';
           } else if($stt == 2 || $stt == 3 || $stt == 4 || $stt == 5) {
-            $loop2 .='<div class="col-6 my-3">
+            $loop2 .='<div class="col-6 my-2 my-md-3">
               <a href="'.get_term_link($term->slug, 'khuvucbds').'" title="'.$term->name.'" class="d-block position-relative rounded overflow-hidden">
                 <div class="img-wrap"><img src="'.$img_url.'" class="img-fluid d-block mx-auto wp-post-image" alt="'.$term->name.'" loading="lazy"></div>
                 <div class="content position-absolute text-white d-flex align-items-center justify-content-center text-center">
                   <div>
                     <h5 class="font-weight-bold text-capitalize">'.$term->name.'</h5>
-                    <div>0 Bất động sản tại '.$term->name.'</div>
+                    <div><strong>'.$term->count.'</strong> Bất động sản tại '.$term->name.'</div>
                   </div>
                 </div>
               </a>
             </div>';
           } else {
-            $loop3 .= '<div class="col-6 col-md-3 my-3">
+            $loop3 .= '<div class="col-6 col-md-3 my-2 my-md-3">
             <a href="'.get_term_link($term->slug, 'khuvucbds').'" title="'.$term->name.'" class="d-block position-relative rounded overflow-hidden">
               <div class="img-wrap"><img src="'.$img_url.'" class="img-fluid d-block mx-auto wp-post-image" alt="'.$term->name.'" loading="lazy"></div>
               <div class="content position-absolute text-white d-flex align-items-center justify-content-center text-center">
                 <div>
                   <h5 class="font-weight-bold text-capitalize">'.$term->name.'</h5>
-                  <div>0 Bất động sản tại '.$term->name.'</div>
+                  <div><strong>'.$term->count.'</strong> Bất động sản tại '.$term->name.'</div>
                 </div>
               </div>
             </a>

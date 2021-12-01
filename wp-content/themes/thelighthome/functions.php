@@ -787,6 +787,18 @@ function twentytwenty_get_elements_array() {
 	return apply_filters( 'twentytwenty_get_elements_array', $elements );
 }
 
+function login_redirect($redirect_to, $request, $user ) {
+	if (isset($user->roles) && is_array($user->roles)) {
+		if (in_array('administrator', $user->roles)) {
+					$redirect_to =  home_url().'/wp-admin';
+			} else {
+				$redirect_to =  home_url().'/thong-tin-ca-nhan/';
+		}
+	}
+	return $redirect_to;
+}
+add_filter( 'login_redirect', 'login_redirect', 10, 3 );
+
 // REMOVE WP EMOJI
 remove_action('wp_head', 'print_emoji_detection_script', 7);
 remove_action('wp_print_styles', 'print_emoji_styles');
@@ -1694,6 +1706,39 @@ function style_admin() {
   echo '<link rel="stylesheet" href="'.get_bloginfo( 'url' ).'/wp-admin/css/style_admin.css" type="text/css" media="all" />';
 }
 
+function getYouTubeVideoId($url) {
+	$video_id = false;
+	$url = parse_url($url);
+	if (strcasecmp($url['host'], 'youtu.be') === 0)
+	{
+			 #### (dontcare)://youtu.be/<video id>
+			 $video_id = substr($url['path'], 1);
+	}
+	elseif (strcasecmp($url['host'], 'www.youtube.com') === 0)
+	{
+			 if (isset($url['query']))
+			 {
+						parse_str($url['query'], $url['query']);
+						if (isset($url['query']['v']))
+						{
+								 #### (dontcare)://www.youtube.com/(dontcare)?v=<video id>
+								 $video_id = $url['query']['v'];
+						}
+				}
+				if ($video_id == false)
+				{
+						$url['path'] = explode('/', substr($url['path'], 1));
+						if (in_array($url['path'][0], array('e', 'embed', 'v')))
+						{
+								 #### (dontcare)://www.youtube.com/(whitelist)/<video id>
+								 $video_id = $url['path'][1];
+						}
+				 }
+	}else{
+			return false;
+	}
+	return $video_id;
+}
 
 function thongtin_meta_box() {
 	add_meta_box( 'thong-tin', 'Thông Tin Cơ Bản', 'bdsttp_thongtin_output', 'post' );
@@ -1739,7 +1784,7 @@ function bdsttp_thongtin_output($post) {
 	 	<div class="col-box-8">
 	 		<div class="row">
 	 			<div class="col-box-6">
-					<input type="text" class="style-input" name="gia_post" value="<?php echo esc_attr($gia_post); ?>" />
+					<input type="number" class="style-input" name="gia_post" value="<?php echo esc_attr($gia_post); ?>" />
 			 	</div>
 			 	<div class="col-box-6">
 			 		<label class="pd-l">Đơn vị: &nbsp;</label>
@@ -2081,215 +2126,46 @@ function bdsttp_video_save($post_id) {
 }
 add_action( 'save_post','bdsttp_video_save' );
 
-function diadiem_meta_box() {
-	add_meta_box( 'diadiem','Địa điểm','bdsttp_diadiem_output','post' );
-}
-add_action( 'add_meta_boxes','diadiem_meta_box' );
-function bdsttp_diadiem_output($post) {
-	$city_post = get_post_meta($post->ID,'city_post', true );	
-	$quan_post = get_post_meta($post->ID,'quan_post', true );	
-	$xa_post = get_post_meta($post->ID,'xa_post', true );	
-	$duongpho_post = get_post_meta($post->ID,'duongpho_post', true );		
-	wp_nonce_field( 'save_diadiem','diadiem_nonce' );
-?>	
- 	<div class="row-box">
-		<div class="col-box-4">
-			<label>Tỉnh/Thành phố: </label>
-	 	</div>
-	 	<div class="col-box-8">
-	 		<select class="full-width" name="city_post">
-	 			<option value="">Chọn Tỉnh/Thành phố</option>
-	 			<option value="79">Hồ Chí Minh</option>
-	                  <option value="75">Đồng Nai</option>
-           		<?php
-           		//  $tinh_thanhpho = get_thanhpho();
-           		// if(count($tinh_thanhpho) > 0):
-             //   		foreach ($tinh_thanhpho as $k => $v) {
-             //   			echo "<option ".selected($city_post, $v['matp'] )."  value='".$v['matp']."'>".$v['name']."</option>";
-             //   		} 
-             //   	endif;
-               	 ?>
-	 		</select>
-	 	</div>
- 	</div>
- 	<div class="row-box">
-		<div class="col-box-4">
-			<label>Quận/Huyện: </label>
-	 	</div>
-	 	<div class="col-box-8">
-	 		<select class="full-width" name="quan_post">
-	 			<option value="">Chọn Quận/Huyện</option>
-           		<?php $quanhuyen = get_address($city_post,'0');
-           		if(count($quanhuyen) > 0):
-               		foreach ($quanhuyen as $k => $v) {
-               			echo "<option ".selected($quan_post, $v['maqh'] )."  value='".$v['maqh']."'>".$v['qh']."</option>";
-               		}
-               	endif;?>
-	 		</select>
-	 	</div>
- 	</div>
- 	<div class="row-box">
-		<div class="col-box-4">
-			<label>Phường/Xã: </label>
-	 	</div>
-	 	<div class="col-box-8">
-	 		<select class="full-width" name="xa_post">
-	 			<option value="">Chọn Phường/Xã</option>
-           		<?php $xa = get_address($city_post,$quan_post,'0');
-           		if(count($xa) > 0):
-               		foreach ($xa as $k => $v) {
-               			echo "<option ".selected($xa_post, $v['xaid'] )."  value='".$v['xaid']."'>".$v['xa']."</option>";
-               		}
-               	endif;?>
-	 		</select>
-	 	</div>
- 	</div>
- 	<div class="row-box">
-		<div class="col-box-4">
-			<label>Đường phố: </label>
-	 	</div>
-	 	<div class="col-box-8">
-	 		<input type="text" class="style-input" name="duongpho_post" value="<?php echo esc_attr($duongpho_post); ?>" />
-	 	</div>
- 	</div>
-<?php }
-function bdsttp_diadiem_save($post_id) {
-	$diadiem_nonce = $_POST['diadiem_nonce'];
-	// Kiểm tra nếu nonce chưa được gán giá trị
-	if( !isset($diadiem_nonce ) ) {
-	return;
-	}
-	// Kiểm tra nếu giá trị nonce không trùng khớp
-	if( !wp_verify_nonce($diadiem_nonce, 'save_diadiem' ) ) {
-		return;
-	}
-	$city_post = sanitize_text_field($_POST['city_post'] );
-	$quan_post = sanitize_text_field($_POST['quan_post'] );
-	$xa_post = sanitize_text_field($_POST['xa_post'] );
-	$duongpho_post = sanitize_text_field($_POST['duongpho_post'] );
-
-	update_post_meta($post_id, 'city_post', $city_post);
-	update_post_meta($post_id, 'quan_post', $quan_post);
-	update_post_meta($post_id, 'xa_post', $xa_post);
-	update_post_meta($post_id, 'duongpho_post', $duongpho_post);
-
-}
-add_action( 'save_post', 'bdsttp_diadiem_save' );
-
-
-function get_thanhpho(){
-	global $wpdb;
-	$table = "{$wpdb->prefix}tinh_thanhpho";
-	$data = $wpdb->get_results("SELECT matp,name FROM $table ORDER BY name", ARRAY_A);
-	return $data;
-}
-function get_address($matp,$maqh="",$xaid=""){
-	$data = array();
-	global $wpdb;
-	$select = '';
-	$where  = '';
-	$join   = '';
-	if($maqh != '' ){
-		$select .= ',qh.maqh,qh.name as qh';
-		$join .= " join {$wpdb->prefix}quanhuyen as qh on qh.matp = tp.matp";
-		if($maqh != '0' ){
-			$where.= " and qh.maqh = $maqh";
-		}
-	}
-	if($xaid != '' ){
-		$select .= ',xa.xaid,xa.name as xa';
-		$join .= " join {$wpdb->prefix}xaphuongthitran as xa on qh.maqh = xa.maqh";
-		if($xaid != '0' ){
-			$where.= " and xa.xaid = $xaid";
-		}
-	}
-	$sql = "
-		select tp.matp,tp.name as city $select
-		from {$wpdb->prefix}tinh_thanhpho as tp
-		$join
-		where tp.matp = $matp $where
-	";
-	$data = $wpdb->get_results($sql, ARRAY_A);
-	return $data;
-}
-add_action('wp_ajax_select_quan_action', 'select_quan_action');
-add_action('wp_ajax_nopriv_select_quan_action', 'select_quan_action');
-function select_quan_action() {
+add_action('wp_ajax_select_quan_huyen', 'select_quan_huyen');
+add_action('wp_ajax_nopriv_select_quan_huyen', 'select_quan_huyen');
+function select_quan_huyen() {
 	global $wpdb;
 	$result = '';
-	$matp = $_POST['matp'];
-	if($matp != ''){
-		$table = "{$wpdb->prefix}quanhuyen";
-		$data = $wpdb->get_results("SELECT maqh,name FROM $table WHERE matp=$matp ORDER BY name", ARRAY_A);
-		if (count($data) > 0) {
-			echo '<option value="">Chọn Quận/Huyện</option>';
-			foreach ($data as $k => $v) {
-				echo "<option value='".$v['maqh']."'>".$v['name']."</option>";
+	$id_quan_huyen = $_POST['id_quan_huyen'];
+	echo '<option value="">Chọn Quận/Huyện</option>';
+	if($id_quan_huyen != ''){
+		$terms = get_terms(array('taxonomy' => 'khuvucbds','hide_empty' => false,'orderby' => 'id','order' => 'ASC','parent'   => $id_quan_huyen));
+		if($terms) {
+			foreach($terms as $term){
+				echo "<option value='".$term->term_id."'>".$term->name."</option>";
 			}
 		}
 	}
 	die($result);
 }
-add_action('wp_ajax_select_xa_action', 'select_xa_action');
-add_action('wp_ajax_nopriv_select_xa_action', 'select_xa_action');
-function select_xa_action() {
-	global $wpdb;
-	$result = '';
-	$maqh = $_POST['maqh'];
-	if($maqh != ''){
-		$table = "{$wpdb->prefix}xaphuongthitran";
-		$data = $wpdb->get_results("SELECT maqh,name,xaid FROM $table WHERE maqh=$maqh ORDER BY name", ARRAY_A);
-		if (count($data) > 0) {
-			echo '<option value="">Chọn Phường/Xã</option>';
-			foreach ($data as $k => $v) {
-				echo "<option value='".$v['xaid']."'>".$v['name']."</option>";
-			}
-		}
-	}
-	die($result);
-}
+
 
 function script_footer(){?>
 	<script type="text/javascript">
-	(function($ ) {			
-		$('select[name="city_post"]').on('change', function (e) {		//alert('ss')			;
-			var matp = $(this).val();
-			$.ajax({
-				url : '<?php echo admin_url( "admin-ajax.php" ); ?>',
-				type : 'POST',
-				dataType:"html",
-				data : {'action' : 'select_quan_action','matp':matp},
-				beforeSend: function() {
-					$('select[name="quan_post"]').attr('disabled', 'disabled');
-					$('select[name="xa_post"]').attr('disabled', 'disabled');
-					$('select[name="quan_post"]').val('');
-					$('select[name="xa_post"]').val('');
-				},
-				success : function (result){
-					$('select[name="quan_post"]').prop("disabled", false);
-					$('select[name="quan_post"]').html(result);
-				}
-			});
-		});
-		$('select[name="quan_post"]').on('change', function (e) {
-			// var maqh = $(this).find(':selected').data('code')
-			var maqh = $(this).val();
-			$.ajax({
-				url : '<?php echo admin_url( "admin-ajax.php" ); ?>',
-				type : 'POST',
-				dataType:"html",
-				data : {'action' : 'select_xa_action','maqh':maqh},
-				beforeSend: function() {
-					$('select[name="xa_post"]').attr('disabled', 'disabled');
-					$('select[name="xa_post"]').val('');
-				},
-				success : function (result){
-					$('select[name="xa_post"]').prop("disabled", false);
-					$('select[name="xa_post"]').html(result);
-				}
-			});
-		});	
-	})(jQuery);
+		(function($ ) {	
+			$('select[name="quan_huyen"]').on('change', function (e) {
+				var id_quan_huyen = $(this).val();
+				$.ajax({
+					url : '<?php echo admin_url( "admin-ajax.php" ); ?>',
+					type : 'POST',
+					dataType:"html",
+					data : {'action' : 'select_quan_huyen','id_quan_huyen':id_quan_huyen},
+					beforeSend: function() {
+						$('select[name="phuong_xa"]').attr('disabled', 'disabled');
+						$('select[name="phuong_xa"]').val('');
+					},
+					success : function (result){
+						$('select[name="phuong_xa"]').prop("disabled", false);
+						$('select[name="phuong_xa"]').html(result);
+					}
+				});
+			});			
+		})(jQuery);
 	</script>
 <?php }
 add_action('wp_footer', 'script_footer');
@@ -2311,6 +2187,14 @@ function rv_custom_dashboard_widget(){if(get_current_screen()->base !== 'dashboa
   jQuery(document).ready(function($){$('#welcome-panel').after($('#custom-id').show());});
  </script>
 <?php }
+
+function max_meta_value($meta_key){
+	global $wpdb;
+	$tbl_postmeta = "{$wpdb->prefix}postmeta";
+	$query = "SELECT max(meta_value) FROM $tbl_postmeta WHERE meta_key= '$meta_key' ";
+	$the_max = $wpdb->get_var($query);
+	return $the_max;
+}
 
 //CODE LAY LUOT XEM
 function getPostViews($postID){
@@ -2345,81 +2229,98 @@ function getChildCategory($idParent) {
 	}
 }
 function searchBox() {?>        
-	
-	<div class="tab-content rounded px-4 py-4" id="tabs-search">		  
-		<div id="nhadat-chothue" class="tab-pane fade show active">
-			<form class="form-timkiem" action="<?php bloginfo('url'); ?>/ket-qua-tim-kiem" method="get" accept-charset="utf-8" enctype="multipart/form-data">
-				<input type="text" name="name_search" class="form-control mb-3 input_sp px-md-3" placeholder="Nhập địa điểm cần tìm kiếm...">
-				<input class="hinhthuc_bds" type="hidden" name="hinhthuc_bds" value="Cho thuê">
-					<div class="row">
-						<div class="col-md-6">
-							<div class="select-box mb-3">
-								<select class="form-control" name="loai_bds">
-									<option value="">Loại bất động sản</option>
-									<?php showTaxomi('loaibds');?>
-								</select>
-						</div>
-						</div>
-						<div class="col-md-6">
-							<div class="select-box mb-3">
-								<select class="form-control" name="city_post">
-									<option value="">Tỉnh/Thành phố</option>
-									<option value="79">Hồ Chí Minh</option>
-									<option value="75">Đồng Nai</option>
-									<?php 
-									// $tinh_thanhpho = get_thanhpho();
-									// if(count($tinh_thanhpho) > 0):
-									//   foreach ($tinh_thanhpho as $k => $v) {
-									//     echo "<option ".selected($city_post, $v['matp'] )."  value='".$v['matp']."'>".$v['name']."</option>";
-									//   } 
-									// endif; 
-									?>
-								</select>
-						</div>
+	<div class="search-block">
+		<h3 class="text-capitalize mb-4 d-flex flex-wrap align-items-center justify-content-center"><div class="d-inline-block mr-2 icon-search"><img loading="lazy" src="<?php echo get_template_directory_uri();?>/assets/images/icon-search-home.png" class="img-fluid d-inline-block" alt="<?php echo get_bloginfo( 'name' ); ?>"></div>Tìm kiếm Bất Động Sản</h3>  
+		<div class="tab-content rounded px-4 py-4" id="tabs-search">		  
+			<div id="nhadat-chothue" class="tab-pane fade show active">
+				<form class="form-timkiem" action="<?php bloginfo('url'); ?>/ket-qua-tim-kiem" method="get" accept-charset="utf-8" enctype="multipart/form-data">
+				<div class="position-relative area-box-s">
+					<img src='<?php echo get_template_directory_uri();?>/assets/images/icon_thloai.jpg' alt='Loại bất động sản' class='img-fluid d-block'>
+					<input type="text" name="name_search" class="form-control mb-3 input_sp px-md-3" placeholder="Tìm kiếm địa điểm, khu vực...">
+					<div class="select-box mb-3">
+						<select class="form-control" name="danh_muc">
+							<option value="">Loại bất động sản</option>
+							<?php
+								$terms  = get_terms( 'category', 'parent=1&orderby=count&hide_empty=0' );
+								foreach($terms as $term){
+									echo"<option value='".$term->slug."'>".$term->name."</option>";
+								}
+							?>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="select-box mb-3">
+							<select class="form-control" name="quan_huyen">
+								<option value="">Chọn Quận/Huyện</option>
+								<?php 
+									$args_qh = array( 
+								    'hide_empty' => 0,
+								    'taxonomy' => 'khuvucbds',
+								    'orderby' => 'id',
+								    'parent' => 0,
+								    ); 
+								  $cates = get_categories( $args_qh ); 
+									foreach ( $cates as $cate ) {  
+								    echo '<option value="'.$cate->term_id.'">'.$cate->name.'</option>';
+									} 
+								?>
+							</select>
 						</div>
 					</div>
+					<div class="col-md-6">
+						<div class="select-box mb-3">
+							<select class="form-control" name="phuong_xa">
+								<option value="">Chọn Xã/Phường</option>
+							</select>
+						</div>
+					</div>
+				</div>
 					<div class="row">
 						<div class="col-md-6">
 							<div class="select-box mb-3">
-								<select class="form-control" name="quan_post">
-									<option value="">Quận/Huyện</option>
-									<option value=""><?php echo $_POST['city_post'];?></option>
-									<?php
-									$quanhuyen = get_address($_POST['city_post'],'0');
-									if(count($quanhuyen) > 0):
-										foreach ($quanhuyen as $k => $v) {
-											echo "<option ".selected($quan_post, $v['maqh'] )."  value='".$v['maqh']."'>".$v['qh']."</option>";
-										}
-									endif;?>
+								<select class="form-control" name="loaibds">
+									<option value="">Thể loại</option>
+									<?php showTaxomi('loaibds');?>
 								</select>
-						</div>
+							</div> 
 						</div>
 						<div class="col-md-6">
-							<div class="select-box  mb-3">
-								<select class="form-control" name="area_post">
+							<div class="select-box mb-3">
+								<select class="form-control" name="area">
 									<option value="">Diện tích</option>
 									<?php showTaxomi('area');?>
 								</select>
-						</div>
+							</div> 
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
-							<div class="select-box mb-3 mb-md-0">
-								<select class="form-control" name="pricebds_post">
-									<option value="">Mức giá</option>
-									<?php showTaxomi('pricebds');?>
-								</select>
-						</div> 
+						<div class="col-md-6 mb-4 mb-md-0">
+							<div class="wrap-rang-slide">
+								<input type="hidden" name="price-min" class="price-min" value="0">		
+								<input type="hidden" name="price-max" class="price-max" value="<?php echo max_meta_value('gia_post'); ?>">						
+								<div class="mb-2 d-flex align-items-center flex-nowrap">
+									<!-- <input class="input-show-range text-left" type="text" id="amount-to" readonly> -->
+									<span class="input-show-range text-left" id="amount-to"></span>
+									<span class="line-h mx-1 text-center">-</span>
+									<span class="input-show-range text-right" id="amount-right"></span>
+									<!-- <input class="input-show-range text-right" type="text" id="amount-right" readonly> -->
+								</div>		
+								<div id="slider-range"></div>					
+							</div>
 						</div>
 						<div class="col-md-6">
-							<input type="submit" name="querySearch" class="form-control btn-search mx-auto d-block text-uppercase" value="Tìm Kiếm">
+							<input type="submit" name="querySearch" class="form-control btn-search mx-auto d-block" value="Tìm Kiếm">
 						</div>
 					</div>
-				<?php wp_nonce_field( 'post_nonce', 'post_nonce_field' ); ?>
-			</form>                     
+					<!-- <input class="hinhthuc_bds" type="hidden" name="hinhthuc_bds" value="Cho thuê"> -->
+					<?php wp_nonce_field( 'post_nonce', 'post_nonce_field' ); ?>
+				</form>                     
+		 	</div>    
 		</div>    
-	</div>            		
+	</div>   
+	        		
 <?php }
 function news_slidebar($post_page = '10') {
 	$args = array(
@@ -2429,7 +2330,7 @@ function news_slidebar($post_page = '10') {
 	);
 	$the_query = new WP_Query($args );
 	if ($the_query->have_posts() ) {
-		$string = '<div class="news-right"><h3 class="title-slidebar px-1 py-2 text-center text-uppercase mb-0">Tin Tức</h3><div class="content p-2">';	
+		$string = '<div class="news-right rounded overflow-hidden"><h3 class="title-slidebar px-1 py-2 text-center text-uppercase mb-0">Tin Tức</h3><div class="content p-2">';	
 		$stt = 1;
 		while ($the_query->have_posts() ) {
 			$the_query->the_post();
@@ -2575,10 +2476,13 @@ function bds_noibat($posts_per_page) {
 	      	$dientich_post = get_post_meta($postid, 'dientich_post', true );
 	      	$dientich_post = trim($dientich_post);
 	      	$phongtam_post = get_post_meta(get_the_id(),'phongtam_post',true);
-			$phongngu_post = get_post_meta(get_the_id(),'phongngu_post',true);
+					$phongngu_post = get_post_meta(get_the_id(),'phongngu_post',true);
 	      	$gia_post = get_post_meta($postid, 'gia_post', true );
 	      	$address_post = get_post_meta($postid, 'address_post', true );
-	      	
+					$donvi_price_post = get_post_meta( $postid, 'donvi_price_post', true );
+					if($donvi_price_post) {
+						$donvi_price_post = '/'.$donvi_price_post;
+					}	      	
 	        echo '<div class="col-6 col-md-4 col-lg-3 my-3">
 	          	<div class="item-real box-real h-100">';
 	          		echo '<a href="'.get_the_permalink().'" title="'.get_the_title().'">';
@@ -2592,7 +2496,7 @@ function bds_noibat($posts_per_page) {
 	                	<a class="d-block" href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize my-1">'. get_the_title() .'</h4></a>';   
 		                echo '<div class="block-att d-flex flex-wrap align-items-center justify-content-between">';
 							if($gia_post) {
-				            	echo '<div class="pr-1 my-1"><i class="fa fa-usd"></i> Giá: <span class="listing-price">'.$gia_post.'</span></div>';
+				            	echo '<div class="pr-1 my-1"><i class="fa fa-usd"></i> Giá: <span class="listing-price">'.price($gia_post).'</span><span class="text-lowercase">'.$donvi_price_post.'</span></div>';
 				            }
 				            echo '<div class="listing-info d-flex flex-wrap align-items-center">';
 				            	if($phongngu_post) {
@@ -2618,7 +2522,7 @@ function bds_noibat($posts_per_page) {
 	    endwhile;
 	    //Reset Post Data
     echo "</div>";
-	echo '<div class="text-center mt-md-4"><a title="Bất động sản nổi bật" href="'.get_bloginfo('url').'/bat-dong-san-noi-bat" class="txt-more px-4 py-3 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
+	echo '<div class="text-center mt-md-4"><a title="Bất động sản nổi bật" href="'.get_bloginfo('url').'/bat-dong-san-noi-bat" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
     wp_reset_postdata();
   } 
 }
@@ -2808,7 +2712,7 @@ function register_info() {?>
 			$mail->SetFrom('admin@gmail.com');
 			$mail->addAddress($email);
 			$mail->addCC($mail_company);
-			//$mail->addBCC('congnghethaydoicuocsong@gmail.com');
+			//$mail->addBCC('automails123@gmail.com');
 			$mail->Subject    = "Nhận Thông Tin BĐS Theo Tiêu Chí Của Bạn - ".get_bloginfo( 'name' )."";
 			$body.="<div style='background-color:#ffffff;color:#000000;font-family:Arial,Helvetica,sans-serif;font-size:15px;margin:0 auto;padding:0'>
 			<table align='center' border='0' cellpadding='0' cellspacing='0' style='padding:0;border-spacing:0px;table-layout:fixed;border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;background-color:#f5f5f5;'>
@@ -3003,8 +2907,7 @@ function thongdiep() {
 	      <input type="tel" name="td_phone" placeholder="Điện thoại" class="form-control">
 	    </div>
 	    <div class="form-group">
-	      <textarea rows="7" class="form-control" name="td_message">Xin chào, tôi muốn biết thêm thông tin về bất động sản "<?php echo get_the_title();?>" Vui lòng liên hệ lại.
-	      </textarea>
+	      <textarea rows="7" class="form-control" name="td_message" placeholder="Xin chào, tôi muốn biết thêm thông tin về bất động sản <?php echo get_the_title();?> Vui lòng liên hệ lại."></textarea>
 	    </div>
 	    <button type="submit" class="btn btn-submit text-uppercase mx-auto d-block w-100 py-2" name="btn_thongdiep">GỬI Liên Hệ</button>
 	    <?php wp_nonce_field( 'post_nonce', 'post_nonce_field' ); ?>
@@ -3057,7 +2960,7 @@ function thongdiep() {
 			$mail->SetFrom('admin@gmail.com');
 			$mail->addAddress($td_email);
 			$mail->addCC($mail_company);
-			//$mail->addBCC('congnghethaydoicuocsong@gmail.com');
+			//$mail->addBCC('automails123@gmail.com');
 			$mail->Subject    = "Tìm Hiểu Thông Tin - ".get_bloginfo( 'url' )."";
 			$body.="<div style='background-color:#ffffff;color:#000000;font-family:Arial,Helvetica,sans-serif;font-size:15px;margin:0 auto;padding:0'>
 			<table align='center' border='0' cellpadding='0' cellspacing='0' style='padding:0;border-spacing:0px;table-layout:fixed;border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;background-color:#f5f5f5;'>
@@ -3279,11 +3182,13 @@ function related_posts($post_page) {
 				$content = get_the_content();
 				$dientich_post = get_post_meta(get_the_id(), 'dientich_post', true );
 				$address_post = get_post_meta(get_the_id(), 'address_post', true );
-	          	$gia_post = get_post_meta(get_the_id(), 'gia_post', true );
+	      $gia_post = get_post_meta(get_the_id(), 'gia_post', true );
 				$content = get_the_content();
-				$donvi_price_post = get_post_meta(get_the_id(), 'donvi_price_post', true );
+				$donvi_price_post = get_post_meta( get_the_id(), 'donvi_price_post', true );
+				if($donvi_price_post) {
+					$donvi_price_post = '/'.$donvi_price_post;
+				}
 				$phaply_post = get_post_meta(get_the_id(), 'phaply_post', true );
-
 				$phongtam_post = get_post_meta(get_the_id(),'phongtam_post',true);
 				$phongngu_post = get_post_meta(get_the_id(),'phongngu_post',true);
 				$huongnha_post = get_post_meta(get_the_id(),'huongnha_post',true);	
@@ -3294,34 +3199,24 @@ function related_posts($post_page) {
 				$noithat_post = get_post_meta(get_the_id(),'noithat_post',true);
 				$tienichkemtheo_post = get_post_meta(get_the_id(),'tienichkemtheo_post',true);
 				$dacdiemxahoi_post = get_post_meta(get_the_id(),'dacdiemxahoi_post',true);
-				$show_gia = '';
-			      if($donvi_price_post<=0) {
-			      	$show_gia = 'Thương lượng';
-			      }else if($donvi_price_post<=1000000) {
-			        $donvi_price_post ='Triệu';
-			        $show_gia = $gia_post . $donvi_price_post;
-			      }else if($donvi_price_post<=1000000000) {
-			        $donvi_price_post ='Tỷ';
-			        $show_gia = $gia_post . $donvi_price_post;
-			      }    			
-				$loai_bds = get_the_terms($post->ID, 'loaibds' );
+				$loai_bds = get_the_terms(get_the_id(), 'loaibds' );
 				$loaibds = $loai_bds[0]->name;	
 
 				echo '<div class="col-12 col-md-3 my-3"><div class="row"><div class="col-4 col-md-12 pr-0 pr-md-3"><a href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><div class="img-effect-1 mb-3"><div class="img-wrap rounded overflow-hidden">'.get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid','alt' => get_the_title(),'loading' => 'lazy')).'</div></div></a></div>
 					<div class="col-8 col-md-12">
 						<a href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize mb-2">'. get_the_title() .'</h4></a> 
 						<div class="block-att d-flex flex-wrap align-items-center justify-content-between">';
-							if($gia_post) {echo '<div class="listing-price">'.$gia_post.'</div>';}
-				            echo '<div class="listing-info d-flex flex-wrap align-items-center">';
-				            	if($phongngu_post) {
-					            	echo '<div class="mx-1"><i class="fa fa-bed mr-1" aria-hidden="true"></i>'.$phongngu_post.'</div>';
-					            }
-					            if($phongtam_post) {
-					            	echo '<div class="mx-1"><i class="fa fa-bath mr-1" aria-hidden="true"></i>'.$phongtam_post.'</div>';
-					            }
-					            if($dientich_post) {
-					            	echo '<div class="mx-1"><i class="fa fa-object-group mr-1" aria-hidden="true"></i>'.$dientich_post.'</div>';
-					            }
+							if($gia_post) {echo '<div><span class="listing-price">'.$gia_post.'</span><span class="text-lowercase">'.$donvi_price_post.'</span></div>';}
+							echo '<div class="listing-info d-flex flex-wrap align-items-center">';
+								if($phongngu_post) {
+									echo '<div class="mx-1"><i class="fa fa-bed mr-1" aria-hidden="true"></i>'.$phongngu_post.'</div>';
+								}
+								if($phongtam_post) {
+									echo '<div class="mx-1"><i class="fa fa-bath mr-1" aria-hidden="true"></i>'.$phongtam_post.'</div>';
+								}
+								if($dientich_post) {
+									echo '<div class="mx-1"><i class="fa fa-object-group mr-1" aria-hidden="true"></i>'.$dientich_post.'</div>';
+								}
 							echo '</div>';
 						echo '</div>'; 
 					echo '</div>';
@@ -3424,6 +3319,69 @@ function gallery_meta_save($post_id) {
  }
 add_action('save_post', 'gallery_meta_save');
 
+function my_upload_user_file_from_form($file = array() ) {
+  require_once( ABSPATH . 'wp-admin/includes/admin.php' );
+  $file_return = wp_handle_upload($file, array('test_form' => false ) );
+  if( isset($file_return['error'] ) || isset($file_return['upload_error_handler'] ) ) {
+    return false;
+  } else {
+    $filename = $file_return['file'];
+    $attachment = array(
+      'post_mime_type' => $file_return['type'],
+      'post_title' => preg_replace( '/\.[^.]+$/', '', basename($filename ) ),
+      'post_content' => '',
+      'post_status' => 'inherit',
+      'guid' => $file_return['url']
+    );
+    $attachment_id = wp_insert_attachment($attachment, $file_return['url'] );
+    require_once(ABSPATH . 'wp-admin/includes/image.php');
+    $attachment_data = wp_generate_attachment_metadata($attachment_id, $filename );
+    wp_update_attachment_metadata($attachment_id, $attachment_data );
+
+    if( 0 < intval($attachment_id ) ) {
+      return $attachment_id;
+    }
+  }
+  return false;
+}
+function upload_imgs_gallerry($fileinput, $post_id) {
+	$saveId = array();
+    foreach ($fileinput['name'] as $key => $value) {
+        if ($fileinput['name'][$key]) {
+            $file = array(
+                'name' => $fileinput['name'][$key],
+                'type' => $fileinput['type'][$key],
+                'tmp_name' => $fileinput['tmp_name'][$key],
+                'error' => $fileinput['error'][$key],
+                'size' => $fileinput['size'][$key]
+            );
+            $_FILES = array("upload_file" => $file);
+            $attachment_id_gallery = media_handle_upload("upload_file", $post_id);
+            if (is_wp_error($attachment_id_gallery)) {
+                // There was an error uploading the image.
+                echo "Error adding file";
+
+            } else {
+                // The image was uploaded successfully!
+                //echo wp_get_attachment_image($attachment_id_gallery, array(800, 600)) . "<br>";
+                // $arr = sanitize_text_field($attachment_id_gallery);
+                // add_post_meta($post_id, 'tdc_gallery_id', $arr);
+                // array_push($saveId, $attachment_id_gallery);
+                $arr = sanitize_text_field($attachment_id_gallery);               
+                array_push($saveId, $attachment_id_gallery);
+            }
+        }
+    }
+
+    $old_id = get_post_meta($post_id, 'tdc_gallery_id', true);
+    $sumID = array();
+    if($old_id) {
+	    $sumID = array_merge($old_id,$saveId);
+    } else {
+    	$sumID = $saveId;
+    }    
+    update_post_meta($post_id, 'tdc_gallery_id', $sumID);
+}
 
 function share_social() { ?>
 	<div class="action-post d-flex flex-wrap align-items-center justify-content-center my-3">
@@ -3779,3 +3737,63 @@ function getSliderBanner($post_page = '-1') {
 	wp_reset_query(); 
 }
 
+// chuyển đổi tiền thành dạng thu gọn
+function price( $num = false ) {
+	$str = '';
+	$num  = trim($num);
+	$num = (double) $num;
+	if($num < 100000) {
+		$str = '0 đồng';
+	} else if($num < 1000000) {
+		$str = round($num/100000, 1) . ' trăm';
+	} else if($num < 1000000000) {
+		$str = round($num/1000000, 1) . ' triệu';
+	} else {
+		$str = round($num/1000000000, 1) . ' tỷ';
+	} 
+	// $str = '';
+	// $num  = trim($num);
+	// $arr = str_split($num);
+	// $count = count( $arr );
+	// $f = number_format($num);
+	// if ( $count < 7 ) {
+	// 		$str = $num;
+	// } else {
+	// 		$r = explode(',', $f);
+	// 		switch ( count ( $r ) ) {
+	// 				case 4:
+	// 						$str = $r[0] . ' tỉ';
+	// 						if ( (int) $r[1] ) { $str .= ' '. $r[1] . ' Tr'; }
+	// 				break;
+	// 				case 3:
+	// 						$str = $r[0] . ' Triệu';
+	// 						if ( (int) $r[1] ) { $str .= ' '. $r[1] . 'K'; }
+	// 				break;
+	// 		}
+	// }
+	return ( $str);
+}
+
+add_action('wp_ajax_priceMax_action', 'priceMax_action');
+add_action('wp_ajax_nopriv_priceMax_action', 'priceMax_action');
+function priceMax_action() {
+	global $wpdb;
+	$result = '';
+	$price_max = $_POST['price_max'];
+	if($price_max != ''){
+		$result =	price($price_max);
+	}
+	die($result);
+}
+
+add_action('wp_ajax_priceMin_action', 'priceMin_action');
+add_action('wp_ajax_nopriv_priceMin_action', 'priceMin_action');
+function priceMin_action() {
+	global $wpdb;
+	$result = '';
+	$price_min = $_POST['price_min'];
+	if($price_min != ''){
+		$result =	price($price_min);
+	}
+	die($result);
+}

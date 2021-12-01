@@ -16,9 +16,8 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-9">
-				<?php the_title( '<h1 class="page-title text-uppercase pb-1">', '</h1>' ); ?>
-				<?php twentyseventeen_edit_link( get_the_ID() ); ?>
-				<div class="entry-content">
+				<?php the_title( '<h1 class="page-title text-uppercase pb-1 mb-4">', '</h1>' ); ?>
+				<div class="entry-content bg-gray p-3 rounded">
 					<?php
 						the_content();
 						// wp_link_pages( array(

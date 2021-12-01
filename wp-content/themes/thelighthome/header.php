@@ -23,9 +23,10 @@ session_start();
 
 <?php wp_head(); 
 	if (is_home() || is_front_page()) {?>
-        <meta property="og:image" content="<?php echo get_template_directory_uri();?>/assets/images/banner.jpg"> 
-    <?php } 
+		<meta property="og:image" content="<?php echo get_template_directory_uri();?>/assets/images/banner.jpg"> 
+	<?php } 
 ?>
+<link rel="stylesheet"  href="<?php echo get_template_directory_uri();?>/assets/css/jquery-ui.min.css" type="text/css" media="all">
 <script src="<?php echo get_template_directory_uri();?>/assets/js/jquery.min.js"></script>
 </head>
 
@@ -42,22 +43,22 @@ session_start();
 					}?>				
 					<ul class="nav m-0 pl-2 pl-md-3 social d-none d-sm-flex">
 						<?php if(get_option('facebook') !='') {echo'<li class="nav-item mb-0 pr-1 pr-md-2 text-center"><a target="_blank" class="d-block" href="'.get_option('facebook').'" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></i></a></li>';}?>
-		                <?php if(get_option('twitter') !='') {echo'<li class="nav-item mb-0 pr-1 pr-md-2 text-center"><a target="_blank" class="d-block" href="'.get_option('twitter').'" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></i></a></li>';}?>
-		                <?php if(get_option('linkedin') !='') {echo'<li class="nav-item mb-0 pr-1 pr-md-2 text-center"><a target="_blank" class="d-block" href="'.get_option('linkedin').'" title="Linkedin"><i class="fa fa-linkedin" aria-hidden="true"></i></i></a></li>';}?>
-		                <?php if(get_option('pinterest') !='') {echo'<li class="nav-item mb-0 pr-1 pr-md-2 text-center"><a target="_blank" class="d-block" href="'.get_option('pinterest').'" title="Pinterest"><i class="fa fa-pinterest" aria-hidden="true"></i></i></a></li>';}?>
-		                <?php if(get_option('youtube') !='') {echo'<li class="nav-item mb-0 pr-1 pr-md-2 text-center"><a target="_blank" class="d-block" href="'.get_option('youtube').'" title="Youtube"><i class="fa fa-youtube" aria-hidden="true"></i></i></a></li>';}?>
+						<?php if(get_option('twitter') !='') {echo'<li class="nav-item mb-0 pr-1 pr-md-2 text-center"><a target="_blank" class="d-block" href="'.get_option('twitter').'" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></i></a></li>';}?>
+						<?php if(get_option('linkedin') !='') {echo'<li class="nav-item mb-0 pr-1 pr-md-2 text-center"><a target="_blank" class="d-block" href="'.get_option('linkedin').'" title="Linkedin"><i class="fa fa-linkedin" aria-hidden="true"></i></i></a></li>';}?>
+						<?php if(get_option('pinterest') !='') {echo'<li class="nav-item mb-0 pr-1 pr-md-2 text-center"><a target="_blank" class="d-block" href="'.get_option('pinterest').'" title="Pinterest"><i class="fa fa-pinterest" aria-hidden="true"></i></i></a></li>';}?>
+						<?php if(get_option('youtube') !='') {echo'<li class="nav-item mb-0 pr-1 pr-md-2 text-center"><a target="_blank" class="d-block" href="'.get_option('youtube').'" title="Youtube"><i class="fa fa-youtube" aria-hidden="true"></i></i></a></li>';}?>
 					</ul>
 				</div>
 			</div>
 		</div>
 		<div class="header-middle">
 			<div class="container">
-				<nav class="navbar navbar-expand-lg px-0 p-md-0">
+				<nav class="navbar navbar-expand-lg py-2 px-0 p-md-0">
 					<h1 class="logo m-0"><span class="text-logo"><?php bloginfo('description'); ?></span><a class="d-block wrap-logo" href="<?php bloginfo('url'); ?>" title="<?php echo get_bloginfo( 'name' ); ?>"><img loading="lazy" src="<?php echo get_template_directory_uri();?>/assets/images/logo.png" class="img-fluid d-block" alt="<?php echo get_bloginfo( 'name' ); ?>"></a></h1>		
 					<button class="navbar-toggler btn-m ml-auto d-md-none" type="button" data-toggle="collapse" data-target="#menu-primary" aria-controls="menu-primary" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span>
         			</button>	
 					<div id="menu-primary" class="navbar-collapse collapse ml-auto justify-content-end pt-4 pt-md-0">
-						<?php if ( has_nav_menu( 'primary' ) ) : ?><?php wp_nav_menu( array('theme_location' => 'primary','menu_id'        => 'top-menu','menu_class' => 'navbar-nav',) ); ?>   <?php endif; ?>
+						<?php if ( has_nav_menu( 'primary' ) ) : ?><?php wp_nav_menu( array('theme_location' => 'primary','menu_id'=> 'top-menu','menu_class' => 'navbar-nav align-items-md-center',) ); ?>   <?php endif; ?>
 					</div>					
 				</nav>
 			</div>
