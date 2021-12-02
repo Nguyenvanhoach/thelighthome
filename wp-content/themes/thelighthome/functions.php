@@ -2339,7 +2339,7 @@ function news_slidebar($post_page = '10') {
 			if($stt == 1) {
 				if ( has_post_thumbnail() ) {		
 					$string .= '<div class="row align-items-center">
-	                  <div class="col-4 pr-0"><a href="' . get_the_permalink() .'"  title="' . get_the_title() .'">'.get_the_post_thumbnail($post_id, 'thumbnail', array( 'class' => 'img-fluid','alt' => get_the_title(), 'loading'=> 'lazy' ) ).'</a></div>
+	                  <div class="col-4 pr-0"><a href="' . get_the_permalink() .'"  title="' . get_the_title() .'">'.get_the_post_thumbnail(get_the_id(), 'thumbnail', array( 'class' => 'img-fluid','alt' => get_the_title(), 'loading'=> 'lazy' ) ).'</a></div>
 	                  <div class="col-8"><a href="' . get_the_permalink() .'"  title="' . get_the_title() .'">'.get_the_title().'</a></div>
 	                </div>';
 				} 
@@ -2347,7 +2347,7 @@ function news_slidebar($post_page = '10') {
 				if ( has_post_thumbnail() ) {		
 					$string .= '<div class="row align-items-center">
 	                  <div class="col-12"><div class="divide my-3 w-100"></div></div>
-	                  <div class="col-4 pr-0"><a href="' . get_the_permalink() .'"  title="' . get_the_title() .'">'.get_the_post_thumbnail($post_id, 'thumbnail', array( 'class' => 'img-fluid','alt' => get_the_title(), 'loading'=> 'lazy' ) ).'</a></div>
+	                  <div class="col-4 pr-0"><a href="' . get_the_permalink() .'"  title="' . get_the_title() .'">'.get_the_post_thumbnail(get_the_id(), 'thumbnail', array( 'class' => 'img-fluid','alt' => get_the_title(), 'loading'=> 'lazy' ) ).'</a></div>
 	                  <div class="col-8"><a href="' . get_the_permalink() .'"  title="' . get_the_title() .'">'.get_the_title().'</a></div>
 	                </div>';
 				} 
@@ -3195,8 +3195,8 @@ function related_posts($post_page) {
 				$noithat_post = get_post_meta(get_the_id(),'noithat_post',true);
 				$tienichkemtheo_post = get_post_meta(get_the_id(),'tienichkemtheo_post',true);
 				$dacdiemxahoi_post = get_post_meta(get_the_id(),'dacdiemxahoi_post',true);
-				$loai_bds = get_the_terms(get_the_id(), 'loaibds' );
-				$loaibds = $loai_bds[0]->name;	
+				// $loai_bds = get_the_terms(get_the_id(), 'loaibds' );
+				// $loaibds = $loai_bds[0]->name;	
 
 				echo '<div class="col-12 col-md-3 my-3"><div class="row"><div class="col-4 col-md-12 pr-0 pr-md-3"><a href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><div class="img-effect-1 mb-3"><div class="img-wrap rounded overflow-hidden">'.get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid','alt' => get_the_title(),'loading' => 'lazy')).'</div></div></a></div>
 					<div class="col-8 col-md-12">

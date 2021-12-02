@@ -77,7 +77,7 @@ get_header(); global $wpdb;?>
               'posts_per_page' => '20',
               'paged'          => $paged,
               'order' => 'ASC',
-				      'category'		=> $danhmuc,
+				      'category'		=> $danh_muc,
               'tax_query' => array(
                 'relation' => 'AND',
                 array(

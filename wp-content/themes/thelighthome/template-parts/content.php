@@ -27,10 +27,10 @@ if($emailAuthor == '') {
 $loai_bds = get_the_terms( $postid, 'loaibds' );
 $loaibds = $loai_bds[0]->name;
 $khuvuc = get_the_terms( $postid, 'khuvucbds' );
-$city_id = get_post_meta( $postid, 'city_post', true );	
-$tbl_city = "{$wpdb->prefix}tinh_thanhpho";
-$citydb = $wpdb->get_row("SELECT matp,name FROM $tbl_city WHERE matp = $city_id", ARRAY_A);		
-$city_post = $citydb['name'];
+// $city_id = get_post_meta( $postid, 'city_post', true );	
+// $tbl_city = "{$wpdb->prefix}tinh_thanhpho";
+// $citydb = $wpdb->get_row("SELECT matp,name FROM $tbl_city WHERE matp = $city_id", ARRAY_A);		
+// $city_post = $citydb['name'];
 $address_post = get_post_meta( $postid, 'address_post', true );
 $dientich_post = get_post_meta( $postid, 'dientich_post', true );
 $gia_post = get_post_meta( $postid, 'gia_post', true );
