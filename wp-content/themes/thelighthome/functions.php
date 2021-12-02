@@ -2230,7 +2230,7 @@ function getChildCategory($idParent) {
 }
 function searchBox() {?>        
 	<div class="search-block">
-		<h3 class="text-capitalize mb-4 d-flex flex-wrap align-items-center justify-content-center"><div class="d-inline-block mr-2 icon-search"><img loading="lazy" src="<?php echo get_template_directory_uri();?>/assets/images/icon-search-home.png" class="img-fluid d-inline-block" alt="<?php echo get_bloginfo( 'name' ); ?>"></div>Tìm kiếm Bất Động Sản</h3>  
+		<h3 class="text-capitalize mb-4 d-flex flex-wrap align-items-center justify-content-center"><div class="d-inline-block mr-2 icon-search"><img loading="lazy" src="<?php echo get_template_directory_uri();?>/assets/images/icon-search-home.png" class="img-fluid d-inline-block" alt="<?php echo get_bloginfo( 'name' ); ?>"></div>Tìm kiếm nơi ở của bạn</h3>  
 		<div class="tab-content rounded px-4 py-4" id="tabs-search">		  
 			<div id="nhadat-chothue" class="tab-pane fade show active">
 				<form class="form-timkiem" action="<?php bloginfo('url'); ?>/ket-qua-tim-kiem" method="get" accept-charset="utf-8" enctype="multipart/form-data">
