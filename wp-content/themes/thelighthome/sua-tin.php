@@ -11,7 +11,8 @@
 	$tagslist = implode( ', ', $tagsarray );
 	$curpost = get_post( $post_ID ); 
 	$author = $curpost->post_author;
-	$categoryPost=get_the_category( $post_ID );
+	$dmuc = get_the_category( $post_ID );
+	
 	$phongtam_post = get_post_meta( $post_ID, 'phongtam_post', true );
 	$phongngu_post = get_post_meta( $post_ID, 'phongngu_post', true );
 	$huongnha_post = get_post_meta( $post_ID, 'huongnha_post', true );	
@@ -19,10 +20,21 @@
 	$sotang_post = get_post_meta( $post_ID, 'sotang_post', true );	
 	$donvi_price_post = get_post_meta( $post_ID, 'donvi_price_post', true );
 	
-	$loai_bds = get_the_terms( $post_ID, 'loaibds' );
-	$loaibds = $loai_bds->name;	
-	
+	$loai_bds = get_the_terms($post_ID, 'loaibds');
+	$quan_huyen = get_the_terms($post_ID, 'khuvucbds');
+	$kv_qh = '';$kv_pxa = '';
+	if( $quan_huyen ){
+		foreach( $quan_huyen as $qh ){ 
+			if( $qh->parent == 0) {
+				$kv_qh = $qh->term_id;
+			} else {
+				$kv_pxa = $qh->term_id;
+			}
+		}
+	}
+	$dtich = get_the_terms($post_ID, 'area');
 	$feat_image = wp_get_attachment_url( get_post_thumbnail_id($post_ID) );	
+	
 	$video_post = get_post_meta( $post_ID, 'video_post', true );
 	$bd_post = get_post_meta( $post_ID, 'bd_post', true );	
 	if(is_user_logged_in()){
@@ -33,107 +45,110 @@
 		$avatar_image =wp_get_attachment_image_src($avatar, 'medium');		
 		$user_levels =  $current_user->user_level;
 		if($user_levels <= 2) { $status_post = "publish"; } else { $status_post = "publish"; }
+
+		$custom = get_post_custom($post_ID);
+		$check_special = isset( $custom['check_special'] ) ? esc_attr( $custom['check_special'][0] ) : '';
 		
 			if($user_id == $author) {
 				if( $_SERVER['REQUEST_METHOD'] == 'POST' && !empty( $_POST['edit_post'] ) && isset( $_POST['post_nonce_field'] ) && wp_verify_nonce( $_POST['post_nonce_field'], 'post_nonce' )) {
 					if (isset($_POST['post_title'])) {
-		                $post_title = sanitize_text_field($_POST['post_title']);
-		            }
-		            if (isset($_POST['post_content'])) {
-		                //$post_content = sanitize_text_field($_POST['post_content']);
-		                $post_content =  apply_filters('the_content', $_POST['post_content']);
-		            }
-		            if (isset($_POST['post_tags'])) {
-		                $post_tags = sanitize_text_field($_POST['post_tags']);
-		            }
-		            if (isset($_POST['duongpho_post'])) {
-		            	$duongpho_post = sanitize_text_field($_POST['duongpho_post']);
-		            }
-		            if (isset($_POST['dientich_post'])) {
-		            	$dientich_post = sanitize_text_field($_POST['dientich_post']);
-		            }
-		            if (isset($_POST['address_post'])) {
-		            	$address_post = sanitize_text_field($_POST['address_post']);
-		            }            
-		            if (isset($_POST['gia_post'])) {
-		            	$gia_post = sanitize_text_field($_POST['gia_post']);
-		            }
-		            if (isset($_POST['donvi_price_post'])) {
-		            	$donvi_price_post = sanitize_text_field($_POST['donvi_price_post']);
-		            }
-		            if (isset($_POST['tenlienhe_post'])) {
-		            	$tenlienhe_post = sanitize_text_field($_POST['tenlienhe_post']);
-		            }
-		            if (isset($_POST['user_address_post'])) {
-		            	$user_address_post = sanitize_text_field($_POST['user_address_post']);
-		            }
-		            if (isset($_POST['phone_post'])) {
-		            	$phone_post = sanitize_text_field($_POST['phone_post']);
-		            }
-		            if (isset($_POST['user_email_post'])) {
-		            	$user_email_post = sanitize_text_field($_POST['user_email_post']);
-		            }		            
-		            if (isset($_POST['duongvao_post'])) {
-		            	$duongvao_post = sanitize_text_field($_POST['duongvao_post']);
-		            }
-		            if (isset($_POST['mattien_post'])) {
-		            	$mattien_post = sanitize_text_field($_POST['mattien_post']);
-		            }
-		            if (isset($_POST['noithat_post'])) {
-		            	$noithat_post = sanitize_text_field($_POST['noithat_post']);
-		            }
-		            if (isset($_POST['tienichkemtheo_post'])) {
-		            	$tienichkemtheo_post = sanitize_text_field($_POST['tienichkemtheo_post']);
-		            }
-		            if (isset($_POST['dacdiemxahoi_post'])) {
-		            	$dacdiemxahoi_post = sanitize_text_field($_POST['dacdiemxahoi_post']);
-		            }
-		            if (isset($_POST['phaply_post'])) {
-		            	$phaply_post = sanitize_text_field($_POST['phaply_post']);
-		            }
-		            if (isset($_POST['phongtam_post'])) {
-			            $phongtam_post = sanitize_text_field( $_POST['phongtam_post'] );
-			        }
-			        if (isset($_POST['huongnha_post'])) {
-			            $huongnha_post = sanitize_text_field( $_POST['huongnha_post'] );
-			        }
-			        if (isset($_POST['sotang_post'])) {
-			            $sotang_post = sanitize_text_field( $_POST['sotang_post'] );
-			        }
-			        if (isset($_POST['phongngu_post'])) {
-			            $phongngu_post = sanitize_text_field( $_POST['phongngu_post'] );
-			        }
-			        if (isset($_POST['huongbancong_post'])) {
-			            $huongbancong_post = sanitize_text_field( $_POST['huongbancong_post'] );
-			        }
-			        if (isset($_POST['loai_bds'])) {
-			            $loai_bds = sanitize_text_field( $_POST['loai_bds'] );
-			            // $catechild_htbds = get_cat_ID($loai_bds);
-			        }
-			       	if (isset($_POST['hinhthuc_bds'])) {
-			            $hinhthuc_bds = sanitize_text_field( $_POST['hinhthuc_bds'] );
-			            $hinhthuc_bdsID = get_cat_ID($hinhthuc_bds);
-			        }
-			        if (isset($_POST['hinhthuc_cat_sub'])) {
-			            $hinhthuc_cat_sub = sanitize_text_field( $_POST['hinhthuc_cat_sub'] );
-			            $hinhthuc_cat_sub_ID =  get_cat_ID($hinhthuc_cat_sub);
-			        }
-			        if (isset($_POST['city_post'])) {
-			            $city_post = sanitize_text_field( $_POST['city_post'] );
-			        }
-			        if (isset($_POST['quan_post'])) {
-			            $quan_post = sanitize_text_field( $_POST['quan_post'] );
-			        }
-			        if (isset($_POST['xa_post'])) {
-			            $xa_post = sanitize_text_field( $_POST['xa_post'] );
-			        }
-			        if (isset($_POST['video_post'])) {
-				        $video_post = sanitize_text_field( $_POST['video_post']);
-				    }
-				    if (isset($_POST['bd_post'])) {
-				        $bd_post = sanitize_text_field($_POST['bd_post']);
-				    }
-			        if(isset($_FILES["userImage"]["type"])){
+							$post_title = sanitize_text_field($_POST['post_title']);
+					}
+					if (isset($_POST['post_content'])) {
+							//$post_content = sanitize_text_field($_POST['post_content']);
+							$post_content =  apply_filters('the_content', $_POST['post_content']);
+					}
+					if (isset($_POST['post_tags'])) {
+							$post_tags = sanitize_text_field($_POST['post_tags']);
+					}
+					if (isset($_POST['duongpho_post'])) {
+						$duongpho_post = sanitize_text_field($_POST['duongpho_post']);
+					}
+					if (isset($_POST['dientich_post'])) {
+						$dientich_post = sanitize_text_field($_POST['dientich_post']);
+					}
+					if (isset($_POST['address_post'])) {
+						$address_post = sanitize_text_field($_POST['address_post']);
+					}            
+					if (isset($_POST['gia_post'])) {
+						$gia_post = sanitize_text_field($_POST['gia_post']);
+					}
+					if (isset($_POST['donvi_price_post'])) {
+						$donvi_price_post = sanitize_text_field($_POST['donvi_price_post']);
+					}
+					if (isset($_POST['tenlienhe_post'])) {
+						$tenlienhe_post = sanitize_text_field($_POST['tenlienhe_post']);
+					}
+					if (isset($_POST['user_address_post'])) {
+						$user_address_post = sanitize_text_field($_POST['user_address_post']);
+					}
+					if (isset($_POST['phone_post'])) {
+						$phone_post = sanitize_text_field($_POST['phone_post']);
+					}
+					if (isset($_POST['user_email_post'])) {
+						$user_email_post = sanitize_text_field($_POST['user_email_post']);
+					}		            
+					if (isset($_POST['duongvao_post'])) {
+						$duongvao_post = sanitize_text_field($_POST['duongvao_post']);
+					}
+					if (isset($_POST['mattien_post'])) {
+						$mattien_post = sanitize_text_field($_POST['mattien_post']);
+					}
+					if (isset($_POST['noithat_post'])) {
+						$noithat_post = sanitize_text_field($_POST['noithat_post']);
+					}
+					if (isset($_POST['tienichkemtheo_post'])) {
+						$tienichkemtheo_post = sanitize_text_field($_POST['tienichkemtheo_post']);
+					}
+					if (isset($_POST['dacdiemxahoi_post'])) {
+						$dacdiemxahoi_post = sanitize_text_field($_POST['dacdiemxahoi_post']);
+					}
+					if (isset($_POST['phaply_post'])) {
+						$phaply_post = sanitize_text_field($_POST['phaply_post']);
+					}
+					if (isset($_POST['phongtam_post'])) {
+						$phongtam_post = sanitize_text_field( $_POST['phongtam_post'] );
+					}
+					if (isset($_POST['huongnha_post'])) {
+							$huongnha_post = sanitize_text_field( $_POST['huongnha_post'] );
+					}
+					if (isset($_POST['sotang_post'])) {
+							$sotang_post = sanitize_text_field( $_POST['sotang_post'] );
+					}
+					if (isset($_POST['phongngu_post'])) {
+							$phongngu_post = sanitize_text_field( $_POST['phongngu_post'] );
+					}
+					if (isset($_POST['huongbancong_post'])) {
+							$huongbancong_post = sanitize_text_field( $_POST['huongbancong_post'] );
+					}
+					if (isset($_POST['loai_bds'])) {
+							$loai_bds = sanitize_text_field( $_POST['loai_bds'] );
+							// $catechild_htbds = get_cat_ID($loai_bds);
+					}
+					if (isset($_POST['hinhthuc_bds'])) {
+							$hinhthuc_bds = sanitize_text_field( $_POST['hinhthuc_bds'] );
+							$hinhthuc_bdsID = get_cat_ID($hinhthuc_bds);
+					}
+					if (isset($_POST['hinhthuc_cat_sub'])) {
+							$hinhthuc_cat_sub = sanitize_text_field( $_POST['hinhthuc_cat_sub'] );
+							$hinhthuc_cat_sub_ID =  get_cat_ID($hinhthuc_cat_sub);
+					}
+					if (isset($_POST['city_post'])) {
+							$city_post = sanitize_text_field( $_POST['city_post'] );
+					}
+					if (isset($_POST['quan_post'])) {
+							$quan_post = sanitize_text_field( $_POST['quan_post'] );
+					}
+					if (isset($_POST['xa_post'])) {
+							$xa_post = sanitize_text_field( $_POST['xa_post'] );
+					}
+					if (isset($_POST['video_post'])) {
+						$video_post = sanitize_text_field( $_POST['video_post']);
+					}
+					if (isset($_POST['bd_post'])) {
+							$bd_post = sanitize_text_field($_POST['bd_post']);
+					}
+					if(isset($_FILES["userImage"]) && ($_FILES["userImage"]["type"]) != '' ) {						
 						$msg = '';
 						$uploaded = FALSE;
 						$extensions = array("jpeg", "jpg", "png", "gif"); // file extensions to be checked
@@ -141,62 +156,66 @@
 						$file = $_FILES["userImage"];
 						$attachment_id =  my_upload_user_file_from_form($file);	
 					}
-			  //       $loaitinrao_post = sanitize_text_field($_POST['loaitinrao_post']);
-					// $datestart_post = sanitize_text_field($_POST['datestart_post']);
-					// $dateend_post = sanitize_text_field($_POST['dateend_post']);
-			        $duanchild_bds = sanitize_text_field( $_POST['duan_bds'] ); 
-
-			        $tax_dientich = '';$mucgia='';
-			        $post = array(
-		            	'ID' => $post_ID,
-					    'post_title'    => wp_strip_all_tags($post_title),
-					    'post_content'  => $post_content,
-					    'post_category' => array(1),
-					    'tags_input'    => $post_tags,
-					    'post_status'   => $post_Status,
-					    'post_type' => 'post',
-					    'tax_input' => array(
-			                'loaibds' => array($loai_bds),
-			                'pricebds' => array ($mucgia),
-			                'area' => array($tax_dientich),
-			            )
+					if($_POST["check_special"] == "on") {
+						$check_special_checked = "on";
+					} else {
+						$check_special_checked = "off";
+					}
+					$danhmuc = sanitize_text_field($_POST['danhmuc']);
+					$loaibds = sanitize_text_field($_POST['loaibds']);
+					$quan_huyen = sanitize_text_field($_POST['quan_huyen']);
+					$phuong_xa = sanitize_text_field($_POST['phuong_xa']);
+					$area = sanitize_text_field( $_POST['area'] );
+					$post = array(
+						'ID' => $post_ID,
+						'post_title'    => wp_strip_all_tags($post_title),
+						'post_content'  => $post_content,
+						'post_category' => array(1,$danhmuc),
+						'tags_input'    => $post_tags,
+						'post_status'   => $post_Status,
+						'post_type' => 'post',
+						'tax_input' => array(
+							'loaibds' => array($loaibds),
+							'area' => array($area),
+							'khuvucbds' => array($quan_huyen,$phuong_xa),
+						)
 					);					
 					$bdsttp_post_id = wp_insert_post($post);
-					wp_set_object_terms($bdsttp_post_id,$loai_bds,'loaibds',true);
-					wp_set_object_terms($bdsttp_post_id,$mucgia,'pricebds',true);
-					wp_set_object_terms($bdsttp_post_id,$tax_dientich,'area',true);
-					update_post_meta($bdsttp_post_id,'_thumbnail_id',$attachment_id);
-					update_post_meta($bdsttp_post_id,'duongpho_post',$duongpho_post);
-					update_post_meta($bdsttp_post_id,'dientich_post',$dientich_post);
-					update_post_meta($bdsttp_post_id,'address_post',$address_post);
-					update_post_meta($bdsttp_post_id,'phongtam_post',$phongtam_post);
-					update_post_meta($bdsttp_post_id,'city_post',$city_post);
-					update_post_meta($bdsttp_post_id,'quan_post',$quan_post);
-					update_post_meta($bdsttp_post_id,'xa_post',$xa_post);
-					update_post_meta($bdsttp_post_id,'gia_post',$gia_post);
-					update_post_meta($bdsttp_post_id,'donvi_price_post',$donvi_price_post);
-					update_post_meta($bdsttp_post_id,'tenlienhe_post',$tenlienhe_post);
-					update_post_meta($bdsttp_post_id,'user_address_post',$user_address_post);
-					update_post_meta($bdsttp_post_id,'phone_post',$phone_post);
-					update_post_meta($bdsttp_post_id,'user_email_post',$user_email_post);
-					update_post_meta($bdsttp_post_id,'bd_post',$bd_post);
-					update_post_meta($bdsttp_post_id,'video_post',$video_post);
-					update_post_meta($bdsttp_post_id,'duongvao_post',$duongvao_post);
-					update_post_meta($bdsttp_post_id,'mattien_post',$mattien_post);
-					update_post_meta($bdsttp_post_id,'noithat_post',$noithat_post);
-					update_post_meta($bdsttp_post_id,'tienichkemtheo_post',$tienichkemtheo_post);
-					update_post_meta($bdsttp_post_id,'dacdiemxahoi_post',$dacdiemxahoi_post);
-					update_post_meta($bdsttp_post_id,'phaply_post',$phaply_post);
-					update_post_meta($bdsttp_post_id,'huongnha_post',$huongnha_post);
-					update_post_meta($bdsttp_post_id,'sotang_post',$sotang_post);
-					update_post_meta($bdsttp_post_id,'phongngu_post',$phongngu_post);
-					update_post_meta($bdsttp_post_id,'huongbancong_post',$huongbancong_post);
-					// update_post_meta($bdsttp_post_id,'loaitinrao_post',$loaitinrao_post);
-					// update_post_meta($bdsttp_post_id,'datestart_post',$datestart_post);
-					// update_post_meta($bdsttp_post_id,'dateend_post',$dateend_post);
-					if(isset($_FILES["gallary-img"]["type"])){
-						$files_gallery = $_FILES["gallary-img"];
-						upload_imgs_gallerry($files_gallery, $bdsttp_post_id);
+					if($bdsttp_post_id) {
+						update_post_meta($bdsttp_post_id, "check_special", $check_special_checked);										
+						update_post_meta($bdsttp_post_id,'_thumbnail_id',$attachment_id);
+						// update_post_meta($bdsttp_post_id,'duongpho_post',$duongpho_post);
+						update_post_meta($bdsttp_post_id,'dientich_post',$dientich_post);
+						update_post_meta($bdsttp_post_id,'address_post',$address_post);
+						update_post_meta($bdsttp_post_id,'phongtam_post',$phongtam_post);
+						
+						update_post_meta($bdsttp_post_id,'gia_post',$gia_post);
+						update_post_meta($bdsttp_post_id,'donvi_price_post',$donvi_price_post);
+						update_post_meta($bdsttp_post_id,'tenlienhe_post',$tenlienhe_post);
+						update_post_meta($bdsttp_post_id,'user_address_post',$user_address_post);
+						update_post_meta($bdsttp_post_id,'phone_post',$phone_post);
+						update_post_meta($bdsttp_post_id,'user_email_post',$user_email_post);
+						update_post_meta($bdsttp_post_id,'bd_post',$bd_post);
+						update_post_meta($bdsttp_post_id,'video_post',$video_post);
+						update_post_meta($bdsttp_post_id,'duongvao_post',$duongvao_post);
+						update_post_meta($bdsttp_post_id,'mattien_post',$mattien_post);
+						update_post_meta($bdsttp_post_id,'noithat_post',$noithat_post);
+						update_post_meta($bdsttp_post_id,'tienichkemtheo_post',$tienichkemtheo_post);
+						update_post_meta($bdsttp_post_id,'dacdiemxahoi_post',$dacdiemxahoi_post);
+						update_post_meta($bdsttp_post_id,'phaply_post',$phaply_post);
+						update_post_meta($bdsttp_post_id,'huongnha_post',$huongnha_post);
+						update_post_meta($bdsttp_post_id,'sotang_post',$sotang_post);
+						update_post_meta($bdsttp_post_id,'phongngu_post',$phongngu_post);
+						update_post_meta($bdsttp_post_id,'huongbancong_post',$huongbancong_post);
+						
+						if(isset($_FILES["gallary-img"]["type"])){
+							$files_gallery = $_FILES["gallary-img"];
+							upload_imgs_gallerry($files_gallery, $bdsttp_post_id);
+						}
+						global $wp;  
+						$current_url = home_url(add_query_arg(array($_GET), $wp->request));
+						echo '<script>window.location = "'.$current_url.'"</script>';exit();
+
 					}
 				}
 			}
@@ -205,7 +224,7 @@
 			<div class="wrap-content">
 				<div class="container">
 					<div class="row">
-						<div class="col-md-9">
+						<div class="col-md-9 mb-3 mb-md-0">
 							<div class="content-list">
 								<h2><?php echo get_the_title();?></h2>
 								<form id="new_post" method="post" action="" enctype="multipart/form-data">
@@ -216,92 +235,154 @@
 										<div class="col-sm-10"><input class="form-control" name="post_title" type="text" value="<?php echo get_the_title($post_ID) ;?>" placeholder="Nhập tiêu đề" /></div>
 									</div>	
 									<div class="row row-list">
-										<div class="col-sm-2 color-primary">
+										<div class="col-12 color-primary mb-3">
 											<strong>Thông tin về bất động sản <span class="color-red">*</span></strong>
 										</div>
-										<div class="col-sm-10">
+										<div class="col-12">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="checkbox" name="check_special" <?php if($check_special == "on"): echo " checked"; endif ?>>
+												<label class="form-check-label mb-sm-0 red mr-1 font-weight-bold text-capitalize">Check chọn hiện thị bất động sản nổi bật ở trang chủ</label>
+											</div>
+										</div>
+										<div class="col-12">
 											<div class="row align-items-sm-center">
-												<div class="col-sm-6 my-2">
+												<div class="col-md-6 my-2">
 													<div class="row align-items-sm-center">
 														<div class="col-sm-5">
-															<label>Hình thức <span class="color-red">*</span></label>										
+															<label class="mb-sm-0">Danh mục Cho thuê</label>	
 														</div>	
 														<div class="col-sm-7">
-															<select name="hinhthuc_bds" class="form-control">
-																<?php 
-																	
+															<select name="danhmuc" class="form-control">
+																<option value="">Chọn danh mục</option>
+																<?php $terms = get_terms(array('taxonomy' => 'category','hide_empty' => false,'parent'   => 1));
+																	foreach($terms as $term){
+																		echo "<option value='".$term->term_id."'";
+																			if($dmuc) {
+																				foreach($dmuc as $dm) {
+																					if($dm->term_id == $term->term_id){ echo 'selected = "selected"';}
+																				}
+																			}
+																		echo ">".$term->name."</option>";
+																	}
 																?>
 															</select>
 														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6 my-2">
+												<div class="col-md-6 my-2">
 													<div class="row align-items-sm-center">
 														<div class="col-sm-5">
-															<label>s</label>	
+															<label class="mb-sm-0">Thể loại</label>	
 														</div>	
 														<div class="col-sm-7">
-															<select name="hinhthuc_cat_sub" class="form-control">	
-																<?php
-																?>													 			
+															<select name="loaibds" class="form-control">
+																<option value="">Chọn thể loại</option>
+																<?php $terms = get_terms(array('taxonomy' => 'loaibds','hide_empty' => false,));
+																	foreach($terms as $term){
+																		echo"<option value='".$term->term_id."'";
+																		if($loai_bds) {
+																			foreach($loai_bds as $lbds) {
+																				if($lbds->term_id == $term->term_id){ echo 'selected = "selected"';}
+																			}
+																		}
+																		echo ">".$term->name."</option>";
+																	}
+																?>
 															</select>
 														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6 my-2">
+												<div class="col-md-6 my-2">
 													<div class="row align-items-sm-center">
 														<div class="col-sm-5">
-															<label>Loại bất động sản <span class="color-red">*</span></label>
+															<label class="mb-sm-0">Quận huyện</label>
 														</div>	
 														<div class="col-sm-7">
-															<select name="loai_bds" class="form-control">
-																<option value="">Lựa chọn</option>
-																<?php $terms = get_terms(array('taxonomy' => 'loaibds','hide_empty' => false,));
-																	foreach($terms as $term){ ?>
-																	<option value="<?php echo $term->name?>" <?php if($loaibds == $term->name){echo 'selected = "selected"' ;} ?>
-																		> <?php echo $term->name ?></option> 
-																	<?php }
+															<select class="form-control" name="quan_huyen">
+																<option value="">Chọn quận/huyện</option>
+																<?php 
+																	$args_qh = array( 
+																		'hide_empty' => 0,
+																		'taxonomy' => 'khuvucbds',
+																		'orderby' => 'id',
+																		'parent' => 0,
+																		); 
+																	$cates = get_categories( $args_qh ); 
+																	foreach ( $cates as $cate ) { 
+																		echo '<option value="'.$cate->term_id.'"';
+																		if( $kv_qh ){
+																				if($kv_qh == $cate->term_id ) {
+																					echo 'selected = "selected"';
+																			}
+																		}
+																		echo '>'.$cate->name.'</option>';
+																	} 
+																?>
+															</select>
+														</div>												
+													</div>											
+												</div>
+												<div class="col-md-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-5">
+														<label class="mb-sm-0">Phường xã</label>						
+														</div>	
+														<div class="col-sm-7">
+															<select class="form-control" name="phuong_xa">
+																<option value="">Chọn Xã/Phường</option>
+																	<?php 
+																		if( $kv_qh ){
+																			$arg_pxa = array( 
+																				'hide_empty' => 0,
+																				'taxonomy' => 'khuvucbds',
+																				'orderby' => 'id',
+																				'parent' => $kv_qh,
+																				); 
+																			$term_pxa = get_categories( $arg_pxa ); 
+																			foreach ( $term_pxa as $pxa ) { 
+																				echo '<option value="'.$pxa->term_id.'"';
+																				if( $kv_pxa ){
+																						if($kv_pxa == $pxa->term_id ) {
+																							echo 'selected = "selected"';
+																					}
+																				}
+																				echo '>'.$pxa->name.'</option>';
+																			} 
+																		}
 																	?>
 															</select>
+														</div>													
+													</div>											
+												</div>
+												<div class="col-md-6 my-2">
+													<div class="row align-items-sm-center">
+														<div class="col-sm-3">
+															<label class="mb-sm-0">Diện tích</label>													
+														</div>	
+														<div class="col-sm-9">
+															<div class="input-group">														    
+																<input value="<?php echo get_post_meta( $post_ID, 'dientich_post', true );?>" type="text" class="form-control" name="dientich_post" placeholder="vdu: 100 m2" />
+																<span class="input-group-btn style-input-group-2 ml-1">
+																	<select class="form-control" name="area">
+																		<option value="">Diện tích</option>
+																		<?php $term_area = get_terms(array('taxonomy' => 'area','hide_empty' => false,));
+																			foreach($term_area as $term){
+																				echo"<option value='".$term->term_id."'";
+																				if($dtich) {
+																					foreach($dtich as $dt) {
+																						if($dt->term_id == $term->term_id){ echo 'selected = "selected"';}
+																					}
+																				}
+																				echo ">".$term->name."</option>";
+																			}
+																		?>
+																	</select>
+																</span>
+															</div>												
 														</div>	
 													</div>											
 												</div>
-												<div class="col-sm-6 my-2">
-													<div class="row align-items-sm-center">
-														<div class="col-sm-5">
-															<label>Tỉnh thành phố <span class="color-red">*</span></label>													
-														</div>	
-														<div class="col-sm-7">
-															<select class="form-control" name="city_post">
-															</select>
-														</div>	
-													</div>
-												</div>
-												<div class="col-sm-6 my-2">
-													<div class="row align-items-sm-center">
-														<div class="col-sm-5">
-															<label>Quận huyện <span class="color-red">*</span></label>												
-														</div>	
-														<div class="col-sm-7">
-															<select class="form-control" name="quan_post">
-																			<?php ?>
-															</select>
-														</div>	
-													</div>											
-												</div>
-												<div class="col-sm-6 my-2">
-													<div class="row align-items-sm-center">
-														<div class="col-sm-5">
-															<label>Phường xã</label>						
-														</div>	
-														<div class="col-sm-7">
-															<select class="form-control" name="xa_post">
-																			<?php ?>
-															</select>
-														</div>	
-													</div>	
-												</div>	
-												<div class="col-sm-6 my-2">
+												<!-- <div class="col-sm-6 my-2">
 													<div class="row align-items-sm-center">
 														<div class="col-sm-5">
 															<label>Đường phố</label>													
@@ -310,46 +391,28 @@
 															<input type="text" class="form-control" name="duongpho_post" value="<?php echo get_post_meta( $post_ID, 'duongpho_post', true );?>" />
 														</div>	
 													</div>											
-												</div>
-												<div class="col-sm-6 my-2">
+												</div> -->
+												<div class="col-md-6 my-2">
 													<div class="row align-items-sm-center">
-														<div class="col-sm-5">
-															<label>Diện tích</label>													
+														<div class="col-sm-3">
+															<label class="mb-sm-0">Giá <span class="color-red">*</span></label>	
 														</div>	
-														<div class="col-sm-7">														
+														<div class="col-sm-9">
 															<div class="input-group">														    
-																	<input value="<?php echo get_post_meta( $post_ID, 'dientich_post', true );?>" type="text" class="form-control" name="dientich_post" placeholder="100" />
-																	<span class="input-group-btn style-input-group-2">
-																			<button class="btn btn-default" type="button">m²</button>
-																	</span>
+																<input value="<?php echo get_post_meta( $post_ID, 'gia_post', true );?>"  type="number" placeholder="vdu: 1 tỷ: 1000000000" class="form-control" name="gia_post" />
+																<span class="input-group-btn style-input-group-2 ml-1">
+																	<select name="donvi_price_post" class="form-control">																	
+																		<option value="Tháng" <?php selected( $donvi_price_post, 'Tháng' ); ?> >Tháng</option>
+																		<option value="Năm" <?php selected( $donvi_price_post, 'Năm' ); ?> >Năm</option>
+																		<option value="Nền" <?php selected( $donvi_price_post, 'Nền' ); ?> >Nền</option>
+																		<option value="Căn" <?php selected( $donvi_price_post, 'Căn' ); ?> >Căn</option>
+																	</select>
+																</span>
 															</div>
-														</div>	
+														</div>												
 													</div>											
-												</div>
-												<div class="col-sm-6 my-2">
-													<div class="row align-items-sm-center">
-														<div class="col-sm-5">
-															<label>Giá <span class="color-red">*</span></label>												
-														</div>	
-														<div class="col-sm-7">
-															<input value="<?php echo get_post_meta( $post_ID, 'gia_post', true );?>"  type="text" placeholder="vdu: 1 tỷ: 1000000000" class="form-control" name="gia_post" />
-														</div>	
-													</div>												
-												</div>
-												<div class="col-sm-6 my-2">
-													<div class="row align-items-sm-center">
-														<div class="col-sm-5">
-															<label>Đơn vị giá</label>												
-														</div>	
-														<div class="col-sm-7">														
-															<select name="donvi_price_post" class="form-control">
-																<option value="0" <?php selected( $donvi_price_post, '0' ); ?>>Thỏa thuận</option>
-																<option value="1000000" <?php selected( $donvi_price_post, '1000000' ); ?>>Triệu</option>
-																<option value="1000000000" <?php selected( $donvi_price_post, '1000000000' ); ?>>Tỷ</option>
-															</select>
-														</div>	
-													</div>											
-												</div>
+												</div>														
+												
 												<div class="col-sm-6 my-2">
 													<div class="row align-items-sm-center">
 														<div class="col-sm-5">
@@ -562,7 +625,9 @@
 										        	if($ids){
 										        		foreach($ids as $key => $value) {
 										        			$image = wp_get_attachment_image_src($value); ?>
-												           <li style="background-image:url('<?php echo $image[0]; ?>')"></li>
+												           <li >
+																			 <img alt="<?php echo get_bloginfo( 'name' ); ?>" class="image-preview img-fluid" src="<?php echo $image[0]; ?>">
+																	</li>
 										        		<?php }
 										        	} ?>
 										        </ul>
@@ -691,5 +756,4 @@
 	get_footer(); ?>
 <script src="<?php echo get_template_directory_uri();?>/assets/js/jquery.min.js"></script>
 <script src="<?php echo get_template_directory_uri();?>/assets/js/ajax-upload.js"></script>
-
 

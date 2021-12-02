@@ -16,7 +16,7 @@
 			<div class="wrap-content">
 				<div class="container">
 					<div class="row">
-						<div class="col-md-9">
+						<div class="col-md-9 mb-3 mb-md-0">
 							<div class="content-list">
 								<h2><?php echo get_the_title();?></h2> 
 								<div class="row form-group">

@@ -43,7 +43,7 @@ if('tin_tuc' === get_post_type()){
 	$postNo = $all_post->found_posts;
 	
 	?>
-	<div class="wrap-crumbs container my-3 my-md-4"><?php if(function_exists('breadcrumb')){breadcrumb();} ?></div>
+	<div class="container"><div class="wrap-crumbs my-3 my-md-4"><?php if(function_exists('breadcrumb')){breadcrumb();} ?></div></div>	
 	<div class="wrap-page archive-area pb-4 pb-md-5">
 		<div class="container">
 			<div class="row">
@@ -68,14 +68,14 @@ if('tin_tuc' === get_post_type()){
 									$phongngu_post = get_post_meta(get_the_id(),'phongngu_post',true);
 									
 									echo '<div class="row item my-3">
-										<div class="col-5 col-md-4 pr-0">';
+										<div class="col-12 col-sm-4 pr-sm-0">';
 											if ( has_post_thumbnail() ) {
 												echo '<a href="'.get_the_permalink().'" title="'.get_the_title().'"><div class="img-effect-1 mb-3"><div class="rounded overflow-hidden">'.get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid','alt' => get_the_title(),'loading' => 'lazy')).'</div></div></a>';
 											} else {
 												echo '<div class="no-img"><span>NO IMAGE</span></div>';
 											}
 										echo '</div>
-										<div class="col-7 col-md-8">
+										<div class="col-12 col-sm-8">
 											<a href="'.get_the_permalink().'" title="'.get_the_title().'"><h3 class="mb-2">'.get_the_title().'</h3></a>
 											<div class="block-att mb-2">';
 												if($gia_post) {
@@ -165,7 +165,7 @@ if('tin_tuc' === get_post_type()){
 	$postNo = $all_post->found_posts;
 
 	?>
-	<div class=" my-md-4"><?php if(function_exists('breadcrumb')){breadcrumb();} ?></div>
+	<div class="container"><div class="wrap-crumbs my-3 my-md-4"><?php if(function_exists('breadcrumb')){breadcrumb();} ?></div></div>
 	<div class="wrap-page archive-area pb-4 pb-md-5">
 		<div class="container">
 			<div class="row">
@@ -190,14 +190,14 @@ if('tin_tuc' === get_post_type()){
 									$phongngu_post = get_post_meta(get_the_id(),'phongngu_post',true);
 									
 									echo '<div class="row item my-3">
-										<div class="col-5 col-md-4 pr-0">';
+										<div class="col-12 col-sm-4 pr-sm-0">';
 											if ( has_post_thumbnail() ) {
 												echo '<a href="'.get_the_permalink().'" title="'.get_the_title().'"><div class="img-effect-1 mb-3"><div class="rounded overflow-hidden">'.get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid','alt' => get_the_title(),'loading' => 'lazy')).'</div></div></a>';
 											} else {
 												echo '<div class="no-img"><span>NO IMAGE</span></div>';
 											}
 										echo '</div>
-										<div class="col-7 col-md-8">
+										<div class="col-12 col-sm-8">
 											<a href="'.get_the_permalink().'" title="'.get_the_title().'"><h3 class="mb-2">'.get_the_title().'</h3></a>
 											<div class="block-att mb-2">';
 												if($gia_post) {

@@ -18,7 +18,7 @@
 						$user_levels =  $current_user->user_level;
 						if($user_levels <= 2) { $status_post = "publish"; } else { $status_post = "publish"; } 		
 					?>	
-					<div class="col-md-9">
+					<div class="col-md-9 mb-3 mb-md-0">
 						<div class="content-list">
 							<h2><?php echo get_the_title();?></h2>
 							<form id="new_post" method="post" action="" enctype="multipart/form-data">
@@ -29,8 +29,14 @@
 									<div class="col-md-10"><input class="form-control" name="post_title" type="text" placeholder="Nhập tiêu đề" /></div>
 								</div>	
 								<div class="row row-list mb-2">
-									<div class="col-12 color-primary">
+									<div class="col-12 color-primary mb-3">
 										<strong>Thông tin về bất động sản <span class="color-red">*</span></strong>
+									</div>
+									<div class="col-12">
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="check_special">
+											<label class="form-check-label mb-sm-0 red mr-1 font-weight-bold text-capitalize">Check chọn hiện thị bất động sản nổi bật ở trang chủ</label>
+										</div>
 									</div>
 									<div class="col-md-6 my-2">
 										<div class="row align-items-sm-center">
@@ -438,6 +444,11 @@
 
 								$quan_huyen = sanitize_text_field($_POST['quan_huyen']);
 								$phuong_xa = sanitize_text_field($_POST['phuong_xa']);
+								if($_POST["check_special"] == "on") {
+									$check_special_checked = "on";
+								} else {
+									$check_special_checked = "off";
+								}
 								
 								if ( $post_title == "" && $post_content == "") {
 									echo '<div class="alert alert-danger text-center"><strong>Lỗi: Vui lòng không bỏ trống những thông tin bắt buộc!</strong></div>';		
@@ -460,7 +471,7 @@
 										$files_gallery = $_FILES["gallary-img"];
 										upload_imgs_gallerry($files_gallery, $bdsttp_post_id);
 									}
-								
+									update_post_meta($bdsttp_post_id, "check_special", $check_special_checked);
 									update_post_meta($bdsttp_post_id,'bd_post',$bd_post);									
 									update_post_meta( $bdsttp_post_id, 'dientich_post', $dientich_post);
 									update_post_meta( $bdsttp_post_id, 'address_post', $address_post);

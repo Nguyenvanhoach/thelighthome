@@ -1,6 +1,8 @@
 <?php
 /*Template Name: BDSNB Template*/
 get_header();
+echo '<link rel="stylesheet" href="'.get_template_directory_uri().'/assets/css/jquery-ui.min.css" type="text/css" media="all">
+<script src="'.get_template_directory_uri().'/assets/js/jquery.min.js"></script>';
  $big = 999999999;
 if ( get_query_var('paged') ) {
   $paged = get_query_var('paged'); 
@@ -25,7 +27,7 @@ $post = array(
 $getPost = new WP_Query( $post );
 $postNo = $getPost->found_posts; ?>
 
-<div class="wrap-page py-5">
+<div class="wrap-page py-4 py-md-5">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-9">
@@ -100,6 +102,65 @@ $postNo = $getPost->found_posts; ?>
 		</div>
 	</div>
 </div><!-- .wrap -->
+<script>
+  $(document).ready(function() {
+    $wrapRangSlide = $('.wrap-rang-slide');
+    if($wrapRangSlide.length) {     
+      $price_min = $('.price-min').val();
+      $price_max = $('.price-max').val();      
+      $( "#slider-range" ).slider({
+        range: true,
+        min: parseInt($price_min),
+        max: parseInt($price_max),
+        values: [ parseInt($price_min), parseInt($price_max) ],
+        slide: function( event, ui ) {
+          // $( "#amount-to").val(ui.values[ 0 ]);
+          // $( "#amount-right").val(ui.values[ 1 ]);
+          //$( "#amount-to").html($( "#slider-range" ).slider("values", 0 ));
+          var price_min = ui.values[0];
+          $.ajax({
+            url : '<?php echo admin_url( "admin-ajax.php" ); ?>',
+            type : 'POST',
+            dataType:"html",
+            data : {'action' : 'priceMin_action','price_min':price_min},
+            success : function (result){
+              $("#amount-to").html(result);
+            }
+          });
+          var price_max = ui.values[1];
+          $.ajax({
+            url : '<?php echo admin_url( "admin-ajax.php" ); ?>',
+            type : 'POST',
+            dataType:"html",
+            data : {'action' : 'priceMax_action','price_max':price_max},
+            success : function (result){
+              $("#amount-right").html(result);
+            }
+          });
+
+          // $('.mo-left').html(ui.values[0].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ' VNĐ');
+          //   $('.mo-right').html(ui.values[1].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ' VNĐ');
+          $('.price-min').val(ui.values[0]);
+          $('.price-max').val(ui.values[1]);
+        }
+      });
+        $( "#amount-to").html($( "#slider-range" ).slider("values", 0 ) + ' đồng');
+        var price_max = $( "#slider-range" ).slider("values", 1 );
+        $.ajax({
+          url : '<?php echo admin_url( "admin-ajax.php" ); ?>',
+          type : 'POST',
+          dataType:"html",
+          data : {'action' : 'priceMax_action','price_max':price_max},
+          success : function (result){
+            $("#amount-right").html(result);
+          }
+        });
+      $('.price-min').val($( "#slider-range" ).slider("values", 0 ));
+      $('.price-max').val($( "#slider-range" ).slider("values", 1 ));
+    }
+  } );
+  </script> 
 <?php 
-echo register_info();
+//echo register_info();
+
 get_footer();

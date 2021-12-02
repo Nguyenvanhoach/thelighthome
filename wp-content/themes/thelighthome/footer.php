@@ -9,7 +9,7 @@
         </div>
         <div class="col-md-6 text-left text-md-right d-flex justify-content-md-end">        
           <div class="wrap-fb overflow-hidden">
-            <iframe src="https://www.facebook.com/plugins/page.php?href=<?php echo get_option('facebook');?>&tabs=timeline&width=340&height=134&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=215651349123280" width="340" height="134" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+            <iframe src="https://www.facebook.com/plugins/page.php?href=<?php echo get_option('facebook');?>&tabs=timeline&width=340&height=130&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=215651349123280" width="340" height="134" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
           </div>
         </div>
       </div>
@@ -38,9 +38,10 @@
           </ul>
         </div>
         <div class="col-12 col-md-6 mb-md-0">
-          <h3 class="text-uppercase"><span class="pb-2">Bản đồ</span></h3>
-          <?php if(get_option('google_map') !='') { echo'<div class="map">'.get_option('google_map').'</div>';}?>
+          <!-- <h3 class="text-uppercase"><span class="pb-2">Bản đồ</span></h3> -->
+          <?php if(get_option('google_map') !='') { echo'<div class="map rounded overflow-hidden">'.get_option('google_map').'</div>';}?>
         </div>
+        
       </div>
     </div>
     <div class="footer-b py-4 mt-md-4">

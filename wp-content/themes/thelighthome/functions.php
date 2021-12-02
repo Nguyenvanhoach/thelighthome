@@ -1656,13 +1656,13 @@ function my_custom_avatar($avatar, $id_or_email, $size, $default, $alt ) {
 	}
 	return $avatar;
 }
-
 function insert_attachment($file_handler,$user_id,$setthumb='false') {
     // check to make sure its a successful upload
     if ($_FILES[$file_handler]['error'] !== UPLOAD_ERR_OK) __return_false();
     require_once(ABSPATH . "wp-admin" . '/includes/image.php');
     require_once(ABSPATH . "wp-admin" . '/includes/file.php');
     require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+		
     $attach_id = media_handle_upload($file_handler, $user_id );
  
     if ($setthumb) update_post_meta($user_id,'bdsttppic',$attach_id);
@@ -2102,7 +2102,7 @@ function video_meta_box() {
 }
 add_action( 'add_meta_boxes','video_meta_box' );
 function bdsttp_video_output($post) {
- 	$bd_post = get_post_meta($post->ID,'video_post', true );
+ 	$video_post = get_post_meta($post->ID,'video_post', true );
 	wp_nonce_field( 'save_video','video_nonce' );
 ?>	
 	<div class="row-box">
@@ -2295,16 +2295,16 @@ function searchBox() {?>
 							</div> 
 						</div>
 					</div>
-					<div class="row">
+					<div class="row align-items-md-center">
 						<div class="col-md-6 mb-4 mb-md-0">
 							<div class="wrap-rang-slide">
 								<input type="hidden" name="price-min" class="price-min" value="0">		
 								<input type="hidden" name="price-max" class="price-max" value="<?php echo max_meta_value('gia_post'); ?>">						
 								<div class="mb-2 d-flex align-items-center flex-nowrap">
 									<!-- <input class="input-show-range text-left" type="text" id="amount-to" readonly> -->
-									<span class="input-show-range text-left" id="amount-to"></span>
+									<span class="input-show-range font-weight-bold text-left" id="amount-to"></span>
 									<span class="line-h mx-1 text-center">-</span>
-									<span class="input-show-range text-right" id="amount-right"></span>
+									<span class="input-show-range font-weight-bold text-right" id="amount-right"></span>
 									<!-- <input class="input-show-range text-right" type="text" id="amount-right" readonly> -->
 								</div>		
 								<div id="slider-range"></div>					
@@ -2483,33 +2483,29 @@ function bds_noibat($posts_per_page) {
 					if($donvi_price_post) {
 						$donvi_price_post = '/'.$donvi_price_post;
 					}	      	
-	        echo '<div class="col-6 col-md-4 col-lg-3 my-3">
-	          	<div class="item-real box-real h-100">';
-	          		echo '<a href="'.get_the_permalink().'" title="'.get_the_title().'">';
-		                if(get_post_thumbnail_id($postid)) {
-		                	echo '<div class="post-media"><div class="img-wrap">'.get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid d-block mx-auto','alt' => get_the_title(),'loading' => 'lazy')).'</div></div>';
-		                }else {
-		                    echo"<div class='bg-img img-wrap'><img src='".get_template_directory_uri()."/assets/images/logo.png' alt='".get_bloginfo( 'name' )."' class='img-fluid d-block mx-auto'></div>  ";
-		                }
-	            	echo '</a>';
-	                echo '<div class="p-2 p-sm-2 p-md-2">
-	                	<a class="d-block" href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize my-1">'. get_the_title() .'</h4></a>';   
-		                echo '<div class="block-att d-flex flex-wrap align-items-center justify-content-between">';
-							if($gia_post) {
-				            	echo '<div class="pr-1 my-1"><i class="fa fa-usd"></i> Giá: <span class="listing-price">'.price($gia_post).'</span><span class="text-lowercase">'.$donvi_price_post.'</span></div>';
-				            }
-				            echo '<div class="listing-info d-flex flex-wrap align-items-center">';
-				            	if($phongngu_post) {
-					            	echo '<div><i class="fa fa-bed mr-1 my-1" aria-hidden="true"></i>'.$phongngu_post.'</div>';
-					            }
-					            if($phongtam_post) {
-					            	echo '<div><i class="fa fa-bath mr-1 my-1" aria-hidden="true"></i>'.$phongtam_post.'</div>';
-					            }
-					            if($dientich_post) {
-					            	echo '<div><i class="fa fa-object-group mr-1 my-1" aria-hidden="true"></i>Diện tích: <strong>'.$dientich_post.'</strong></div>';
-					            }
-					        echo '</div>';
-						echo '</div>';
+	        echo '<div class="col-6 col-md-4 col-lg-3 my-2 my-md-3"><div class="item-real box-real h-100"><a href="'.get_the_permalink().'" title="'.get_the_title().'">';
+									if(get_post_thumbnail_id($postid)) {
+										echo '<div class="post-media"><div class="img-wrap">'.get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid d-block mx-auto','alt' => get_the_title(),'loading' => 'lazy')).'</div></div>';
+									} else {
+											echo"<div class='bg-img img-wrap'><img src='".get_template_directory_uri()."/assets/images/logo.png' alt='".get_bloginfo( 'name' )."' class='img-fluid d-block mx-auto'></div>  ";
+									}
+							echo '</a>';
+							echo '<div class="p-2 p-sm-2 p-md-2"><a class="d-block" href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize my-1">'. get_the_title() .'</h4></a><div class="block-att d-flex flex-wrap align-items-center justify-content-between">';
+								if($gia_post) {
+									echo '<div class="pr-1 my-1"><i class="fa fa-usd"></i> Giá: <span class="listing-price">'.price($gia_post).'</span><span class="text-lowercase">'.$donvi_price_post.'</span></div>';
+								}
+								echo '<div class="listing-info d-flex flex-wrap align-items-center">';
+									if($phongngu_post) {
+										echo '<div><i class="fa fa-bed mr-1 my-1" aria-hidden="true"></i>'.$phongngu_post.'</div>';
+									}
+									if($phongtam_post) {
+										echo '<div><i class="fa fa-bath mr-1 my-1" aria-hidden="true"></i>'.$phongtam_post.'</div>';
+									}
+									if($dientich_post) {
+										echo '<div><i class="fa fa-object-group mr-1 my-1" aria-hidden="true"></i>Diện tích: <strong>'.$dientich_post.'</strong></div>';
+									}
+								echo '</div>';
+							echo '</div>';
 						// echo '<div class="my-1 block-att"><i class="fa fa-calendar"></i>  '.get_the_time('d-m-Y').'</div>';
 						echo '<div class="des-mute d-flex flex-nowrap mt-2">';
 							if($address_post) {
@@ -2522,7 +2518,7 @@ function bds_noibat($posts_per_page) {
 	    endwhile;
 	    //Reset Post Data
     echo "</div>";
-	echo '<div class="text-center mt-md-4"><a title="Bất động sản nổi bật" href="'.get_bloginfo('url').'/bat-dong-san-noi-bat" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
+	echo '<div class="text-center mt-3 mt-md-4"><a title="Bất động sản nổi bật" href="'.get_bloginfo('url').'/bat-dong-san-noi-bat" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
     wp_reset_postdata();
   } 
 }
@@ -3206,7 +3202,7 @@ function related_posts($post_page) {
 					<div class="col-8 col-md-12">
 						<a href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><h4 class="text-capitalize mb-2">'. get_the_title() .'</h4></a> 
 						<div class="block-att d-flex flex-wrap align-items-center justify-content-between">';
-							if($gia_post) {echo '<div><span class="listing-price">'.$gia_post.'</span><span class="text-lowercase">'.$donvi_price_post.'</span></div>';}
+							if($gia_post) {echo '<div><span class="listing-price">'.price($gia_post).'</span><span class="text-lowercase">'.$donvi_price_post.'</span></div>';}
 							echo '<div class="listing-info d-flex flex-wrap align-items-center">';
 								if($phongngu_post) {
 									echo '<div class="mx-1"><i class="fa fa-bed mr-1" aria-hidden="true"></i>'.$phongngu_post.'</div>';
@@ -3254,9 +3250,9 @@ function related_taxomy_posts($post_page) {
 	$related_items = new WP_Query($args );
 	// loop over query
 	if ($related_items->have_posts()) :
-		echo '<div class="related-post mt-4"><h2 class="text-uppercase">Bài viết khác Liên Quan</h2><div class="row grid-item grid-2">';
-			while ($related_items->have_posts() ) : $related_items->the_post(); 
-				echo '<div class="col-12 col-sm-6 col-md-4 my-3"><a class="post-media mb-3 d-block" href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><div class="img-wrap">'. get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid mx-auto d-block rounded','alt' => get_the_title(),'loading' => 'lazy') ) .'</div></a>
+		echo '<div class="related-post mt-4"><h2 class="text-uppercase">Bài viết khác Liên Quan</h2><div class="row grid-item grid-2 space-m">';
+			while ($related_items->have_posts() ) : $related_items->the_post();
+				echo '<div class="col-6 col-md-4 my-3"><a class="post-media mb-3 d-block" href="' . get_the_permalink() .'"  title="' . get_the_title() .'"><div class="img-wrap">'. get_the_post_thumbnail( get_the_id(), 'full', array( 'class' =>'img-fluid mx-auto d-block rounded','alt' => get_the_title(),'loading' => 'lazy') ) .'</div></a>
 					<div class="post-content">
 						<h3 class="text-capitalize"><a href="' . get_the_permalink() .'"  title="' . get_the_title() .'">'. get_the_title() .'</a></h3>   
 					</div>
@@ -3267,6 +3263,7 @@ function related_taxomy_posts($post_page) {
 	// Reset Post Data
 	wp_reset_postdata();
 }
+
 function gallery_enqueue_hook($hook) { 
     if ( 'post.php' == $hook || 'post-new.php' == $hook ) { 
 		wp_enqueue_media();
@@ -3345,6 +3342,9 @@ function my_upload_user_file_from_form($file = array() ) {
   return false;
 }
 function upload_imgs_gallerry($fileinput, $post_id) {
+	require_once( ABSPATH . 'wp-admin/includes/image.php' );
+    require_once( ABSPATH . 'wp-admin/includes/file.php' );
+    require_once( ABSPATH . 'wp-admin/includes/media.php' );
 	$saveId = array();
     foreach ($fileinput['name'] as $key => $value) {
         if ($fileinput['name'][$key]) {
@@ -3356,6 +3356,9 @@ function upload_imgs_gallerry($fileinput, $post_id) {
                 'size' => $fileinput['size'][$key]
             );
             $_FILES = array("upload_file" => $file);
+
+						// var_dump($file[ư]); exit();
+
             $attachment_id_gallery = media_handle_upload("upload_file", $post_id);
             if (is_wp_error($attachment_id_gallery)) {
                 // There was an error uploading the image.
@@ -3583,22 +3586,22 @@ function contactForm() {
 		
 	} ?>
 	    <form action="" method="post" accept-charset="utf-8">                                
-	      <div class="row ">
-	          <div class="col-sm-6 my-2"><label class="mb-0">Họ và tên *</label><input type="text" name="your-name" class="form-control" required=""></div>
-	          <div class="col-sm-6 my-2"><label class="mb-0">Email *</label><input type="email" name="your-email" required="" class="form-control"></div>
+	      <div class="row">
+	          <div class="col-lg-6 my-2"><label class="mb-0">Họ và tên *</label><input type="text" name="your-name" class="form-control" required=""></div>
+	          <div class="col-lg-6 my-2"><label class="mb-0">Email *</label><input type="email" name="your-email" required="" class="form-control"></div>
 	      </div>
 	      <div class="row ">
-	          <div class="col-sm-6 my-2"><label class="mb-0">Số điện thoại </label><input type="tel" name="your-tel" class="form-control"></div>
-	          <div class="col-sm-6 my-2"><label class="mb-0">Địa chỉ </label><input type="text" name="diachi" class="form-control"></div>
+	          <div class="col-lg-6 my-2"><label class="mb-0">Số điện thoại </label><input type="tel" name="your-tel" class="form-control"></div>
+	          <div class="col-lg-6 my-2"><label class="mb-0">Địa chỉ </label><input type="text" name="diachi" class="form-control"></div>
 	      </div>
 	      <div class="row ">
 	          <div class="col-sm-12 my-2"><label class="mb-0">Nội dung </label><textarea name="your-message" cols="40" rows="4" class="form-control"></textarea></div>
 	      </div>
 	      <div class=" g-recaptcha-block row align-items-center">
-	      	<div class="col-12 col-sm-8 my-2">
+	      	<div class="col-12 col-lg-8 my-2">
             	<div class="g-recaptcha" data-sitekey="6LfPR9EZAAAAAJ0e7Ypy2pR6NUV9td8ZW_xoa400"></div>
             </div>
-            <div class="col-12 col-sm-4 text-center text-sm-right my-2">
+            <div class="col-12 col-lg-4 text-center text-lg-right my-2">
             	<input type="submit" value="Gửi yêu cầu" class="btn btn-read-more text-capitalize px-5 px-sm-3 py-2 ml-sm-auto" name="btn-send">
             </div>
           </div>

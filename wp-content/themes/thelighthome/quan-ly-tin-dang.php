@@ -16,7 +16,7 @@
 			<div class="wrap-content-user">
 				<div class="container">
 					<div class="row">
-						<div class="col-md-9">
+						<div class="col-md-9 mb-3 mb-md-0">
 							<div class="content-user">
 								<div class="block-general">
 									<h3><i class="fa fa-tasks"></i>&nbsp;Quản lý tin rao bán / cho thuê</h3>

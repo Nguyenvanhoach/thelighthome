@@ -135,7 +135,7 @@ get_header(); ?>
               </div>                -->
               <div class="form-group g-recaptcha-block d-flex align-items-center justify-content-between">
                 <div class="g-recaptcha" data-sitekey="6LcKm2cUAAAAAJgufT8d0xuHWYMo2obawRflQ29N"></div>
-                <a class="pull-right" href="<?php bloginfo('url'); ?>/lost-password.php" title="Quên mật khẩu?" style="font-weight: bold;">Quên mật khẩu?</a>
+                <a class="pull-right" href="<?php bloginfo('url'); ?>/lay-lai-mat-khau" title="Quên mật khẩu?" style="font-weight: bold;">Quên mật khẩu?</a>
               </div>
               <div class="form-group text-danger">
                 <?php

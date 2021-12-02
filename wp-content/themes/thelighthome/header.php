@@ -53,7 +53,7 @@ session_start();
 		</div>
 		<div class="header-middle">
 			<div class="container">
-				<nav class="navbar navbar-expand-lg py-2 px-0 p-md-0">
+				<nav class="navbar navbar-expand-md py-2 px-0 p-md-0">
 					<h1 class="logo m-0"><span class="text-logo"><?php bloginfo('description'); ?></span><a class="d-block wrap-logo" href="<?php bloginfo('url'); ?>" title="<?php echo get_bloginfo( 'name' ); ?>"><img loading="lazy" src="<?php echo get_template_directory_uri();?>/assets/images/logo.png" class="img-fluid d-block" alt="<?php echo get_bloginfo( 'name' ); ?>"></a></h1>		
 					<button class="navbar-toggler btn-m ml-auto d-md-none" type="button" data-toggle="collapse" data-target="#menu-primary" aria-controls="menu-primary" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span>
         			</button>	

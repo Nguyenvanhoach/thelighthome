@@ -55,7 +55,7 @@ get_header();
 </div>
 <div class="real-estate-special bg-gray py-4 py-md-5">
   <div class="container">
-		<div class="text-center mb-4">
+		<div class="text-center mb-3 mb-md-4">
 			<h2 class="title-h2 d-flex flex-wrap align-items-center justify-content-center color-spec"><strong class="text-uppercase">Bất động sản nổi bật</strong></h2>
 			<div class="separator position-relative d-inline-block color-spec"><i class="fa fa-circle mx-auto color-spec"></i></div>
 		</div>
@@ -147,7 +147,7 @@ get_header();
                   echo "</div></div>";
                 endwhile;
                 wp_reset_postdata();
-                echo '<div class="text-center mt-md-4"><a title="Bất động sản nổi bật" href="'.get_bloginfo('url').'/cho-thue/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
+                echo '<div class="text-center mt-3 mt-md-4"><a title="Bất động cho thuê" href="'.get_bloginfo('url').'/cho-thue/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
               } 
             ?>
           </div>
@@ -215,7 +215,7 @@ get_header();
                   echo "</div></div>";
                 endwhile;
                 wp_reset_postdata();
-                echo '<div class="text-center mt-md-4"><a title="Phòng trọ" href="'.get_bloginfo('url').'/cho-thue/phong-tro/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
+                echo '<div class="text-center mt-3 mt-md-4"><a title="Phòng trọ" href="'.get_bloginfo('url').'/cho-thue/phong-tro/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
               } 
             ?>
           </div>
@@ -282,7 +282,7 @@ get_header();
                   echo "</div></div>";
                 endwhile;
                 wp_reset_postdata();
-                echo '<div class="text-center mt-md-4"><a title="Căn hộ chung cư" href="'.get_bloginfo('url').'/cho-thue/can-ho-chung-cu/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
+                echo '<div class="text-center mt-3 mt-md-4"><a title="Căn hộ chung cư" href="'.get_bloginfo('url').'/cho-thue/can-ho-chung-cu/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
               } 
             ?>
           </div>
@@ -350,7 +350,7 @@ get_header();
                   echo "</div></div>";
                 endwhile;
                 wp_reset_postdata();
-                echo '<div class="text-center mt-md-4"><a title="Văn Phòng" href="'.get_bloginfo('url').'/cho-thue/van-phong/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
+                echo '<div class="text-center mt-3 mt-md-4"><a title="Văn Phòng" href="'.get_bloginfo('url').'/cho-thue/van-phong/" class="txt-more px-3 py-2 font-weight-bold d-inline-block">Xem thêm <i class="ml-2 fa fa-chevron-right"></i></a></div>';
               } 
             ?>
           </div>

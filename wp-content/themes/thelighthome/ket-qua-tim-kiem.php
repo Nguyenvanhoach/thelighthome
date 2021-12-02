@@ -3,10 +3,10 @@
   Template Name: Result Search
 */  
 get_header(); global $wpdb;?>
-  <div class="wrap-result-search py-5">
+  <div class="wrap-result-search py-4 py-md-5">
     <div class="container">
       <div class="row">
-        <div class="col-md-9">          
+        <div class="col-md-9 mb-3 mb-md-0">         
           <div class="real-list">
             <?php //if(isset( $_POST['querySearch'] ) && isset( $_POST['post_nonce_field'] ) && wp_verify_nonce( $_POST['post_nonce_field'], 'post_nonce' )) {
               if (isset($_GET['name_search'])) {

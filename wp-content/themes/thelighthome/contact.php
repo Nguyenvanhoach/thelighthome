@@ -5,7 +5,7 @@
 ?>
 <main class="main">
 	<div class="wrap-crumbs container my-3 my-md-4"><?php if(function_exists('breadcrumb')){breadcrumb();} ?></div>
-	<div class="contact-form py-4">
+	<div class="contact-form py-md-4">
 		<div class="container">
 		    <div class="row">
 		      <div class="col-md-6 order-sm-1 mb-4">
@@ -17,7 +17,7 @@
 		      <div class="col-md-6 mb-4">
 		        <div class="pr-md-5">
 		          <div class="pr-lg-5">
-		            <h3 class="text-uppercase item-line mb-3 mb-md-5 position-relative"><span class="pb-2">Thông tin</span></h3>
+		            <h3 class="text-uppercase item-line mb-4 mb-md-5 position-relative"><span class="pb-2">Thông tin</span></h3>
 		            <h2 class="mb-2 text-uppercase">The Light Home</h2>
 								<p>Phòng Đẹp Dịch Vụ Thông Minh Chuyên cung cấp phòng cho thuê tại Thành phố Hồ Chí Minh</p>
 		            <ul class="address list-unstyled mb-4">
